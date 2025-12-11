@@ -1,0 +1,119 @@
+---
+const schedule = {
+  season: "Summer 2026",
+  events: [
+    {
+      name: "Show Me The Money",
+      org: "PGF",
+      dates: "Jun 5-8",
+      location: "Newberry, FL",
+    },
+    {
+      name: "Top Gun Invite",
+      org: "Top Gun Events",
+      dates: "Jun 11-14",
+      location: "Shawnee, KS",
+    },
+    {
+      name: "Scenic City",
+      org: "",
+      dates: "Jun 18-21",
+      location: "Dalton, GA",
+    },
+    {
+      name: "Colorado 4th of July Sparkler",
+      org: "",
+      dates: "Jun 28 - Jul 5",
+      location: "Denver, CO",
+    },
+    {
+      name: "Atlanta Legacy Invitational",
+      org: "",
+      dates: "Jul 10-12",
+      location: "Atlanta, GA",
+    },
+    {
+      name: "Alliance Championship Series",
+      org: "Alliance Fastpitch",
+      dates: "Jul 19-26",
+      location: "Kokomo, IN",
+    },
+  ],
+};
+---
+
+<section id="schedule" class="section-padding bg-gray-50">
+  <div class="max-w-6xl mx-auto pt-8 pb-8">
+    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-4">
+      Where to See Me Play
+    </h2>
+    <p class="text-gray-600 text-center mb-12">
+      {schedule.season} Tournament Schedule
+    </p>
+
+    <div class="max-w-3xl mx-auto">
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Desktop Table -->
+        <div class="hidden md:block overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-navy text-white">
+              <tr>
+                <th class="px-6 py-4 text-left text-sm font-semibold">Date</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold">Event</th>
+                <th class="px-6 py-4 text-left text-sm font-semibold">Location</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              {schedule.events.map((event, index) => (
+                <tr class={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                  <td class="px-6 py-4 text-sm text-gray-900 font-medium whitespace-nowrap">
+                    {event.dates}
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="text-sm font-medium text-gray-900">{event.name}</div>
+                    {event.org && (
+                      <div class="text-xs text-gray-500">{event.org}</div>
+                    )}
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-600">
+                    {event.location}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="md:hidden divide-y divide-gray-100">
+          {schedule.events.map((event) => (
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h3 class="font-semibold text-gray-900">{event.name}</h3>
+                  {event.org && (
+                    <p class="text-xs text-gray-500">{event.org}</p>
+                  )}
+                </div>
+                <span class="text-sm font-medium text-navy bg-navy/10 px-2 py-1 rounded">
+                  {event.dates}
+                </span>
+              </div>
+              <p class="text-sm text-gray-600 flex items-center">
+                <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {event.location}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <p class="text-center text-sm text-gray-500 mt-6">
+        * Schedule subject to change
+      </p>
+    </div>
+  </div>
+</section>

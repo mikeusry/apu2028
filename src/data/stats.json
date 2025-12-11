@@ -1,0 +1,26 @@
+{
+  "season": "Fall 2025",
+  "team": "Stars National Walker",
+  "record": "24-7-2",
+  "achievement": "Alliance Atlantic Region Champions",
+  "batting": {
+    "gp": 33,
+    "gs": 9,
+    "avg": ".380",
+    "obp": ".438",
+    "slg": ".479",
+    "ops": ".922",
+    "hits": 27,
+    "doubles": 3,
+    "hr": 1,
+    "rbi": 14,
+    "sb": "9/11",
+    "sbPct": "82%",
+    "qab": "60.5%"
+  },
+  "measurables": {
+    "homeToFirst": "TBD",
+    "overhandThrow": "Plus arm",
+    "sixtyYard": "TBD"
+  }
+}

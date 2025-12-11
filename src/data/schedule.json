@@ -1,0 +1,41 @@
+{
+  "season": "Summer 2026",
+  "events": [
+    {
+      "name": "Show Me The Money",
+      "org": "PGF",
+      "dates": "Jun 5-8",
+      "location": "Newberry, FL"
+    },
+    {
+      "name": "Top Gun Invite",
+      "org": "Top Gun Events",
+      "dates": "Jun 11-14",
+      "location": "Shawnee, KS"
+    },
+    {
+      "name": "Scenic City",
+      "org": "",
+      "dates": "Jun 18-21",
+      "location": "Dalton, GA"
+    },
+    {
+      "name": "Colorado 4th of July Sparkler",
+      "org": "",
+      "dates": "Jun 28 - Jul 5",
+      "location": "Denver, CO"
+    },
+    {
+      "name": "Atlanta Legacy Invitational",
+      "org": "",
+      "dates": "Jul 10-12",
+      "location": "Atlanta, GA"
+    },
+    {
+      "name": "Alliance Championship Series",
+      "org": "Alliance Fastpitch",
+      "dates": "Jul 19-26",
+      "location": "Kokomo, IN"
+    }
+  ]
+}

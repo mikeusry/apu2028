@@ -1,0 +1,50 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Ayn Parker Usry | 2028 Softball Recruit | Outfield",
+  description = "Ayn Parker Usry - Class of 2028 softball recruit. Outfielder for Stars National Walker. Contact-hitter with plus speed and plus arm. Seeking D1 opportunities."
+} = Astro.props;
+
+const siteUrl = "https://aynparkerusry.com";
+const ogImage = `${siteUrl}/og-image.jpg`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Ayn Parker Usry | 2028 Softball Recruit" />
+    <meta property="og:description" content="Class of 2028 outfielder for Stars National Walker. View highlights, stats, and schedule." />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@AynParkerUsry" />
+    <meta name="twitter:title" content="Ayn Parker Usry | 2028 Softball Recruit" />
+    <meta name="twitter:description" content="Class of 2028 outfielder. View highlights and stats." />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

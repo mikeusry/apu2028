@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import VideoPlayer from '../components/VideoPlayer.astro';
+import SkillsGrid from '../components/SkillsGrid.astro';
+import StatsTable from '../components/StatsTable.astro';
+import Schedule from '../components/Schedule.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+
+// Import video data if needed
+// import videos from '../data/videos.json';
+---
+
+<Layout>
+  <Header />
+
+  <main>
+    <Hero />
+    <VideoPlayer />
+    <SkillsGrid />
+    <StatsTable />
+    <Schedule />
+    <About />
+    <Contact />
+  </main>
+
+  <Footer />
+</Layout>

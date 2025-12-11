@@ -1,0 +1,42 @@
+---
+// Cloudinary video configuration
+const CLOUD_NAME = 'southland-organics';
+const VIDEO_PUBLIC_ID = 'AynParkerUsry/Triple_Impact_Caymol_Premier_tjrmwn';
+
+// Build optimized video URLs
+const videoBaseUrl = `https://res.cloudinary.com/${CLOUD_NAME}/video/upload`;
+
+// Transformations for quality and delivery optimization
+const videoTransforms = 'q_auto,f_auto';
+
+// Full video URL with auto quality and format
+const videoUrl = `${videoBaseUrl}/${videoTransforms}/${VIDEO_PUBLIC_ID}.mp4`;
+
+// Poster/thumbnail from video (auto-generated at 0 seconds)
+const posterUrl = `${videoBaseUrl}/so_0,w_1280,h_720,c_fill,q_auto,f_auto/${VIDEO_PUBLIC_ID}.jpg`;
+---
+
+<section id="video" class="section-padding bg-navy">
+  <div class="max-w-6xl mx-auto pt-8 pb-8">
+    <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-8">
+      Highlight Reel
+    </h2>
+
+    <div class="aspect-video w-full max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl bg-navy-dark">
+      <video
+        class="w-full h-full object-cover"
+        controls
+        playsinline
+        preload="metadata"
+        poster={posterUrl}
+      >
+        <source src={videoUrl} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <p class="text-center text-white/60 text-sm mt-4">
+      Triple Impact Caymol Premier
+    </p>
+  </div>
+</section>

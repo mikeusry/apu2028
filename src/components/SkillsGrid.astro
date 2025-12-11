@@ -1,0 +1,104 @@
+---
+import CloudinaryImage from './CloudinaryImage.astro';
+
+interface SkillVideo {
+  id: string;
+  title: string;
+  description: string;
+  thumbnailId?: string; // Cloudinary public ID for thumbnail
+  duration?: string;
+  videoId?: string;
+}
+
+// Skill videos configuration
+// Set thumbnailId to the Cloudinary image name (without folder) once uploaded
+const skillVideos: SkillVideo[] = [
+  {
+    id: "hitting",
+    title: "Hitting",
+    description: "Swing mechanics, bat speed, contact, game ABs",
+    thumbnailId: undefined, // e.g., "hitting-thumbnail"
+  },
+  {
+    id: "fielding",
+    title: "Fielding",
+    description: "Reads, routes, catches, ground balls",
+    thumbnailId: undefined, // e.g., "fielding-thumbnail"
+  },
+  {
+    id: "arm",
+    title: "Arm Strength",
+    description: "Throws from outfield, accuracy, velocity",
+    thumbnailId: undefined, // e.g., "arm-thumbnail"
+  },
+  {
+    id: "speed",
+    title: "Speed",
+    description: "Home to first, baserunning, stolen bases",
+    thumbnailId: undefined, // e.g., "speed-thumbnail"
+  },
+];
+---
+
+<section id="skills" class="section-padding bg-gray-50">
+  <div class="max-w-6xl mx-auto pt-8 pb-8">
+    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-4">
+      Skills Breakdown
+    </h2>
+    <p class="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+      Click each category to view detailed skill videos
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {skillVideos.map((video) => (
+        <div class="group relative bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <!-- Thumbnail/Placeholder -->
+          <div class="aspect-video bg-gradient-to-br from-navy to-navy-light flex items-center justify-center relative">
+            {video.thumbnailId ? (
+              <CloudinaryImage
+                publicId={video.thumbnailId}
+                alt={`${video.title} skills video thumbnail`}
+                width={600}
+                height={338}
+                crop="fill"
+                gravity="auto"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                widths={[300, 450, 600]}
+                class="w-full h-full object-cover"
+              />
+            ) : (
+              <div class="text-center text-white/80">
+                <svg class="w-12 h-12 mx-auto mb-2 opacity-60" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                </svg>
+                <span class="text-sm">Video coming</span>
+              </div>
+            )}
+
+            {/* Duration badge */}
+            {video.duration && (
+              <span class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded z-10">
+                {video.duration}
+              </span>
+            )}
+
+            {/* Play overlay on hover */}
+            <div class="absolute inset-0 bg-navy/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
+              <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-navy ml-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="p-4">
+            <h3 class="font-bold text-lg text-gray-900 mb-1">{video.title}</h3>
+            <p class="text-sm text-gray-600">{video.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

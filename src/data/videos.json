@@ -1,0 +1,42 @@
+{
+  "highlight": {
+    "id": "",
+    "title": "2025 Highlight Reel",
+    "description": "Full highlight reel featuring hitting, fielding, and baserunning",
+    "poster": ""
+  },
+  "skills": [
+    {
+      "id": "hitting",
+      "title": "Hitting",
+      "description": "Swing mechanics, bat speed, contact, game ABs",
+      "videoId": "",
+      "thumbnail": "",
+      "duration": ""
+    },
+    {
+      "id": "fielding",
+      "title": "Fielding",
+      "description": "Reads, routes, catches, ground balls",
+      "videoId": "",
+      "thumbnail": "",
+      "duration": ""
+    },
+    {
+      "id": "arm",
+      "title": "Arm Strength",
+      "description": "Throws from outfield, accuracy, velocity",
+      "videoId": "",
+      "thumbnail": "",
+      "duration": ""
+    },
+    {
+      "id": "speed",
+      "title": "Speed",
+      "description": "Home to first, baserunning, stolen bases",
+      "videoId": "",
+      "thumbnail": "",
+      "duration": ""
+    }
+  ]
+}

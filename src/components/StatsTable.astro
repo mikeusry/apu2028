@@ -1,0 +1,92 @@
+---
+const stats = {
+  season: "Fall 2025",
+  team: "Stars National Walker",
+  record: "24-7-2",
+  achievement: "Alliance Atlantic Region Champions",
+  batting: [
+    { label: "GP/GS", value: "33/9" },
+    { label: "AVG", value: ".380" },
+    { label: "OBP", value: ".438" },
+    { label: "SLG", value: ".479" },
+    { label: "OPS", value: ".922" },
+    { label: "H", value: "27" },
+    { label: "2B", value: "3" },
+    { label: "HR", value: "1" },
+    { label: "RBI", value: "14" },
+    { label: "SB", value: "9/11 (82%)" },
+    { label: "QAB%", value: "60.5%" },
+  ],
+  measurables: [
+    { label: "Home to 1st", value: "TBD" },
+    { label: "Overhand Throw", value: "Plus arm" },
+    { label: "60-yard dash", value: "TBD" },
+  ],
+};
+---
+
+<section id="stats" class="section-padding bg-white">
+  <div class="max-w-6xl mx-auto pt-8 pb-8">
+    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-4">
+      Stats & Measurables
+    </h2>
+    <p class="text-gray-600 text-center mb-12">
+      {stats.season} - {stats.team}
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <!-- Batting Stats -->
+      <div class="bg-gray-50 rounded-xl p-6">
+        <h3 class="font-bold text-lg text-navy mb-4 flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          Season Stats
+        </h3>
+
+        <div class="grid grid-cols-2 gap-3">
+          {stats.batting.map((stat) => (
+            <div class="flex justify-between items-center py-2 border-b border-gray-200 last:border-0">
+              <span class="text-gray-600 text-sm">{stat.label}</span>
+              <span class="font-semibold text-gray-900 font-mono">{stat.value}</span>
+            </div>
+          ))}
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-gray-300">
+          <p class="text-sm text-gray-700">
+            <span class="font-semibold">Team Record:</span> {stats.record}
+          </p>
+          <p class="text-sm text-navy font-medium mt-1">
+            {stats.achievement}
+          </p>
+        </div>
+      </div>
+
+      <!-- Athletic Measurables -->
+      <div class="bg-gray-50 rounded-xl p-6">
+        <h3 class="font-bold text-lg text-navy mb-4 flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          Athletic Measurables
+        </h3>
+
+        <div class="space-y-4">
+          {stats.measurables.map((item) => (
+            <div class="flex justify-between items-center py-3 border-b border-gray-200 last:border-0">
+              <span class="text-gray-600">{item.label}</span>
+              <span class="font-semibold text-gray-900">{item.value}</span>
+            </div>
+          ))}
+        </div>
+
+        <div class="mt-6 p-4 bg-navy/5 rounded-lg">
+          <p class="text-sm text-gray-700">
+            <span class="font-semibold">Additional:</span> State track finalist in triple jump as a freshman
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
