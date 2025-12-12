@@ -1,10 +1,9 @@
 ---
 const academics = {
   gpa: "3.74",
-  currentSchool: "Prince Avenue Christian School",
-  currentLocation: "Bogart, GA",
-  futureSchool: "Liberty University Online Academy",
-  futureDate: "January 2026",
+  school: "Liberty University Online Academy",
+  sat: "Scheduled Spring 2026",
+  major: "Business (Finance)",
   honors: "BETA Club inductee (2025-2026)",
 };
 ---
@@ -42,13 +41,7 @@ const academics = {
           </div>
 
           <div class="pb-3 border-b border-gray-200">
-            <p class="text-gray-600 text-sm mb-1">Current School</p>
-            <p class="font-semibold text-gray-900">{academics.currentSchool}</p>
-            <p class="text-sm text-gray-500">{academics.currentLocation}</p>
-          </div>
-
-          <div class="pb-3 border-b border-gray-200">
-            <p class="text-gray-600 text-sm mb-1">Enrolling</p>
+            <p class="text-gray-600 text-sm mb-1">School</p>
             <p class="font-semibold text-gray-900">
               <a
                 href="https://www.liberty.edu/online-academy/"
@@ -56,10 +49,19 @@ const academics = {
                 rel="noopener noreferrer"
                 class="text-navy hover:underline"
               >
-                {academics.futureSchool}
+                {academics.school}
               </a>
             </p>
-            <p class="text-sm text-gray-500">{academics.futureDate}</p>
+          </div>
+
+          <div class="pb-3 border-b border-gray-200">
+            <p class="text-gray-600 text-sm mb-1">SAT</p>
+            <p class="font-medium text-gray-900">{academics.sat}</p>
+          </div>
+
+          <div class="pb-3 border-b border-gray-200">
+            <p class="text-gray-600 text-sm mb-1">Intended Major</p>
+            <p class="font-medium text-gray-900">{academics.major}</p>
           </div>
 
           <div>

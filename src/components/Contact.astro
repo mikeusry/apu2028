@@ -32,6 +32,12 @@ const contacts = {
     twitter: "@StarsNatWalker",
     twitterUrl: "https://x.com/StarsNatWalker",
   },
+  references: {
+    track: {
+      name: "Jonathan Kilgore",
+      role: "Track Coach, Prince Avenue Christian School",
+    },
+  },
 };
 ---
 
@@ -161,5 +167,13 @@ const contacts = {
         </a>
       </div>
     </div>
+
+    <!-- References Note -->
+    <div class="mt-8 text-center">
+      <p class="text-gray-400 text-sm">
+        <span class="font-medium text-gray-300">Reference available:</span> {contacts.references.track.name} ({contacts.references.track.role})
+      </p>
+    </div>
+
   </div>
 </section>
