@@ -1,274 +1,385 @@
 ---
-// Coach visits dashboard - shows who's been looking at the site
-// Access at: aynparkerusry.com/coach-visits?key=YOUR_KEY
+// Coach visits dashboard - Tailwind + Flowbite-style
+const isLocal = import.meta.env.DEV;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>Coach Visits | Ayn Parker Usry</title>
+    <title>Visits | APU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          }
+        }
+      }
+    </script>
     <style>
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: #0f172a;
-        color: #e2e8f0;
-        padding: 20px;
-        min-height: 100vh;
-      }
-      .container { max-width: 900px; margin: 0 auto; }
-      h1 { font-size: 1.5rem; margin-bottom: 20px; color: #fff; }
-      h2 { font-size: 1.1rem; margin: 20px 0 10px; color: #94a3b8; }
-
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 12px;
-        margin-bottom: 24px;
-      }
-      .stat-card {
-        background: #1e293b;
-        padding: 16px;
-        border-radius: 8px;
-        text-align: center;
-      }
-      .stat-value { font-size: 2rem; font-weight: bold; color: #22d3ee; }
-      .stat-label { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
-
-      .video-plays {
-        background: #1e293b;
-        border-radius: 8px;
-        padding: 16px;
-        margin-bottom: 24px;
-      }
-      .video-plays h2 { margin-top: 0; color: #22d3ee; }
-      .play-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #334155;
-      }
-      .play-item:last-child { border-bottom: none; }
-      .play-location { font-weight: 600; }
-      .play-time { color: #64748b; font-size: 0.85rem; }
-
-      .events-list {
-        background: #1e293b;
-        border-radius: 8px;
-        overflow: hidden;
-      }
-      .event-row {
-        display: grid;
-        grid-template-columns: 100px 1fr 120px;
-        padding: 10px 16px;
-        border-bottom: 1px solid #334155;
-        font-size: 0.85rem;
-      }
-      .event-row:last-child { border-bottom: none; }
-      .event-type {
-        background: #334155;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        width: fit-content;
-      }
-      .event-type.video_play { background: #22d3ee; color: #0f172a; }
-
-      .cities-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 8px;
-      }
-      .city-tag {
-        background: #334155;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 0.8rem;
-      }
-
-      .login-form {
-        max-width: 300px;
-        margin: 100px auto;
-        text-align: center;
-      }
-      .login-form input {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #334155;
-        border-radius: 6px;
-        background: #1e293b;
-        color: #fff;
-        margin-bottom: 12px;
-      }
-      .login-form button {
-        width: 100%;
-        padding: 12px;
-        background: #22d3ee;
-        color: #0f172a;
-        border: none;
-        border-radius: 6px;
-        font-weight: 600;
-        cursor: pointer;
-      }
-
-      .loading { text-align: center; padding: 40px; color: #64748b; }
-      .error { color: #f87171; text-align: center; padding: 20px; }
+      [x-cloak] { display: none !important; }
     </style>
   </head>
-  <body>
-    <div class="container">
-      <div id="login-section" class="login-form">
-        <h1>Coach Visits</h1>
-        <p style="color: #64748b; margin-bottom: 20px;">Enter the access key to view visit data</p>
-        <input type="password" id="key-input" placeholder="Access Key" />
-        <button onclick="loadData()">View Visits</button>
+  <body class="bg-gray-900 text-white font-sans min-h-screen">
+    {isLocal && (
+      <div class="bg-gray-800 text-gray-500 text-[10px] text-center py-0.5 font-medium tracking-widest uppercase">
+        Local
+      </div>
+    )}
+
+    <!-- Login -->
+    <div id="login" class={`max-w-sm mx-auto px-4 pt-32 ${isLocal ? 'hidden' : ''}`}>
+      <div class="text-center mb-8">
+        <h1 class="text-xl font-semibold text-white">Coach Visits</h1>
+        <p class="text-gray-500 text-sm mt-2">Enter your access key</p>
+      </div>
+      <input
+        type="password"
+        id="key"
+        placeholder="Access key"
+        class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      />
+      <button
+        onclick="load()"
+        class="w-full mt-4 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+      >
+        View Dashboard
+      </button>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dash" class={`max-w-6xl mx-auto px-4 py-8 ${isLocal ? '' : 'hidden'}`}>
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-white">Ayn Parker Usry</h1>
+          <p class="text-gray-500 text-sm">Recruitment activity tracker</p>
+        </div>
+        <button
+          onclick="load()"
+          class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 transition-colors"
+        >
+          Refresh
+        </button>
       </div>
 
-      <div id="dashboard" style="display: none;">
-        <h1>Who's Watching Ayn?</h1>
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-gray-800/50 rounded-xl p-5 border border-gray-700/50">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <p class="text-gray-500 text-xs font-medium uppercase tracking-wider">College Towns</p>
+          </div>
+          <p id="stat-colleges" class="text-3xl font-bold text-blue-400">0</p>
+        </div>
+        <div class="bg-gray-800/50 rounded-xl p-5 border border-gray-700/50">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+            <p class="text-gray-500 text-xs font-medium uppercase tracking-wider">Page Views</p>
+          </div>
+          <p id="stat-views" class="text-3xl font-bold text-white">0</p>
+        </div>
+        <div class="bg-gray-800/50 rounded-xl p-5 border border-gray-700/50">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-gray-500 text-xs font-medium uppercase tracking-wider">Video Plays</p>
+          </div>
+          <p id="stat-plays" class="text-3xl font-bold text-emerald-400">0</p>
+        </div>
+        <div class="bg-gray-800/50 rounded-xl p-5 border border-gray-700/50">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-gray-500 text-xs font-medium uppercase tracking-wider">30s+ Engaged</p>
+          </div>
+          <p id="stat-engaged" class="text-3xl font-bold text-amber-400">0</p>
+        </div>
+      </div>
 
-        <div class="stats-grid" id="stats-grid">
-          <div class="stat-card">
-            <div class="stat-value" id="today-views">-</div>
-            <div class="stat-label">Today's Views</div>
+      <!-- College Towns Pills -->
+      <div id="college-towns" class="flex flex-wrap gap-2 mb-6"></div>
+
+      <!-- Activity Table -->
+      <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow-xl shadow-black/20">
+        <!-- Table Header -->
+        <div class="px-6 py-4 border-b border-gray-700">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-lg font-semibold text-white">Activity Feed</h2>
+              <p class="text-gray-500 text-sm">Real-time visitor activity</p>
+            </div>
+            <button
+              id="live-btn"
+              onclick="toggleLive()"
+              class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+            >
+              <span id="live-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="live-text">Live</span>
+            </button>
           </div>
-          <div class="stat-card">
-            <div class="stat-value" id="today-plays">-</div>
-            <div class="stat-label">Video Plays Today</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="unique-cities">-</div>
-            <div class="stat-label">Unique Cities</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="yesterday-views">-</div>
-            <div class="stat-label">Yesterday's Views</div>
+          <!-- Filter buttons -->
+          <div class="flex items-center gap-2">
+            <button onclick="setFilter('all')" data-filter="all" class="filter-btn active px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700 text-white">
+              All
+            </button>
+            <button onclick="setFilter('video_play')" data-filter="video_play" class="filter-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">
+              Videos
+            </button>
+            <button onclick="setFilter('engagement')" data-filter="engagement" class="filter-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">
+              30s+ Only
+            </button>
+            <button onclick="setFilter('college')" data-filter="college" class="filter-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">
+              College Towns
+            </button>
           </div>
         </div>
 
-        <div class="video-plays">
-          <h2>Recent Video Plays</h2>
-          <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 12px;">Coaches who watched the highlight reel</p>
-          <div id="video-plays-list">
-            <div class="loading">Loading...</div>
-          </div>
+        <!-- Table -->
+        <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+          <table class="w-full">
+            <thead class="bg-gray-900/80 sticky top-0 z-10">
+              <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th class="px-6 py-3">Type</th>
+                <th class="px-6 py-3">Location</th>
+                <th class="px-6 py-3">Source / Device</th>
+                <th class="px-6 py-3 text-right">Duration</th>
+                <th class="px-6 py-3 text-right">Time</th>
+              </tr>
+            </thead>
+            <tbody id="feed-body" class="divide-y divide-gray-700/50">
+              <!-- Rows injected by JS -->
+            </tbody>
+          </table>
         </div>
 
-        <h2>Cities Visited From</h2>
-        <div class="cities-list" id="cities-list"></div>
-
-        <h2 style="margin-top: 24px;">Today's Activity</h2>
-        <div class="events-list" id="events-list">
-          <div class="loading">Loading...</div>
+        <!-- Table Footer -->
+        <div class="px-6 py-3 border-t border-gray-700 bg-gray-800/50">
+          <p class="text-xs text-gray-500">
+            Showing <span id="showing-count" class="font-medium text-gray-300">0</span> of <span id="total-count" class="text-gray-300">0</span> events
+          </p>
         </div>
       </div>
     </div>
 
-    <script>
-      function formatTime(isoString) {
-        const date = new Date(isoString);
-        return date.toLocaleString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
+    <script define:vars={{ isLocal }}>
+      const MOCK = {
+        summary: {
+          todayPageviews: 18,
+          todayVideoPlays: 5,
+          uniqueCities: 12,
+          totalEngagements: 4,
+          citiesVisited: ['Tallahassee, FL','Knoxville, TN','Athens, GA','Gainesville, FL','Starkville, MS','Auburn, AL','Atlanta, GA','Birmingham, AL']
+        },
+        todayEvents: [
+          { type: 'video_play', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1800000).toISOString(), device: 'Desktop', page: '/', duration: '3:42', country_code: 'US', source: 'Direct' },
+          { type: 'engagement', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1850000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', source: 'Direct' },
+          { type: 'pageview', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1900000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', source: 'Google' },
+          { type: 'video_play', city: 'Knoxville', region: 'TN', timestamp: new Date(Date.now()-5400000).toISOString(), device: 'Desktop', page: '/', duration: '2:15', country_code: 'US', source: 'Twitter' },
+          { type: 'pageview', city: 'Knoxville', region: 'TN', timestamp: new Date(Date.now()-5500000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', source: 'Twitter' },
+          { type: 'video_progress', city: 'Athens', region: 'GA', timestamp: new Date(Date.now()-10800000).toISOString(), device: 'Mobile', page: '/', duration: '1:30', country_code: 'US', source: 'Instagram' },
+          { type: 'pageview', city: 'Athens', region: 'GA', timestamp: new Date(Date.now()-10900000).toISOString(), device: 'Mobile', page: '/', country_code: 'US', source: 'Instagram' },
+          { type: 'pageview', city: 'Auburn', region: 'AL', timestamp: new Date(Date.now()-28800000).toISOString(), device: 'Tablet', page: '/', country_code: 'US', source: 'Direct' },
+          { type: 'video_play', city: 'Gainesville', region: 'FL', timestamp: new Date(Date.now()-36000000).toISOString(), device: 'Desktop', page: '/', duration: '4:22', country_code: 'US', source: 'Google' },
+          { type: 'pageview', city: 'Atlanta', region: 'GA', timestamp: new Date(Date.now()-43200000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', source: 'Direct' },
+          { type: 'pageview', city: 'Starkville', region: 'MS', timestamp: new Date(Date.now()-50000000).toISOString(), device: 'Mobile', page: '/', country_code: 'US', source: 'Twitter' },
+        ]
+      };
+
+      const COLLEGES = ['Tallahassee','Gainesville','Knoxville','Athens','Auburn','Starkville','Columbia','Clemson','Tuscaloosa','Lexington','Louisville','Nashville','Boone','Cullowhee','Charleston','Greenville','Spartanburg','Kennesaw','Jacksonville','Tampa','Orlando','Lynchburg','Blacksburg','Charlottesville','Baton Rouge','College Station','Norman','Stillwater','Fayetteville','Oxford'];
+
+      const isCollege = c => c && COLLEGES.some(t => c.toLowerCase().includes(t.toLowerCase()));
+
+      const ago = ts => {
+        const m = Math.floor((Date.now() - new Date(ts)) / 60000);
+        if (m < 1) return 'Just now';
+        if (m < 60) return m + 'm ago';
+        const h = Math.floor(m / 60);
+        if (h < 24) return h + 'h ago';
+        return Math.floor(h / 24) + 'd ago';
+      };
+
+      const flag = cc => {
+        if (!cc || cc.length !== 2) return '';
+        return String.fromCodePoint(...cc.toUpperCase().split('').map(c => 127397 + c.charCodeAt(0)));
+      };
+
+      const typeBadge = {
+        pageview: { label: 'View', bg: 'bg-gray-500/10', text: 'text-gray-400', border: 'border-gray-500/20' },
+        video_play: { label: 'Video', bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/20' },
+        video_progress: { label: 'Watch', bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
+        engagement: { label: '30s+', bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20' }
+      };
+
+      let isLive = true;
+      let currentFilter = 'all';
+      let allData = null;
+
+      function toggleLive() {
+        isLive = !isLive;
+        const btn = document.getElementById('live-btn');
+        const dot = document.getElementById('live-dot');
+        const txt = document.getElementById('live-text');
+
+        if (isLive) {
+          btn.className = 'flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+          dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+          txt.textContent = 'Live';
+        } else {
+          btn.className = 'flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-full bg-gray-700 text-gray-400 border border-gray-600';
+          dot.className = 'w-2 h-2 rounded-full bg-gray-500';
+          txt.textContent = 'Paused';
+        }
+      }
+
+      function setFilter(filter) {
+        currentFilter = filter;
+        // Update button styles
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          if (btn.dataset.filter === filter) {
+            btn.className = 'filter-btn active px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700 text-white';
+          } else {
+            btn.className = 'filter-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors';
+          }
         });
+        if (allData) render(allData);
       }
 
-      function formatTimeAgo(isoString) {
-        const date = new Date(isoString);
-        const now = new Date();
-        const diffMs = now - date;
-        const diffMins = Math.floor(diffMs / 60000);
-        const diffHours = Math.floor(diffMins / 60);
-        const diffDays = Math.floor(diffHours / 24);
+      function render(d) {
+        allData = d;
+        const collegeTowns = d.summary.citiesVisited.filter(c => isCollege(c.split(',')[0]));
 
-        if (diffMins < 1) return 'Just now';
-        if (diffMins < 60) return `${diffMins}m ago`;
-        if (diffHours < 24) return `${diffHours}h ago`;
-        return `${diffDays}d ago`;
+        // Stats
+        document.getElementById('stat-colleges').textContent = collegeTowns.length;
+        document.getElementById('stat-views').textContent = d.summary.todayPageviews;
+        document.getElementById('stat-plays').textContent = d.summary.todayVideoPlays;
+        document.getElementById('stat-engaged').textContent = d.summary.totalEngagements || 0;
+
+        // College town pills
+        const townsEl = document.getElementById('college-towns');
+        townsEl.innerHTML = collegeTowns.map(t =>
+          `<span class="px-3 py-1 text-sm font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full">${t}</span>`
+        ).join('');
+
+        // Feed table
+        const tbody = document.getElementById('feed-body');
+        const allEvents = d.todayEvents || [];
+
+        // Apply filter
+        let events = allEvents;
+        if (currentFilter === 'video_play') {
+          events = allEvents.filter(e => e.type === 'video_play' || e.type === 'video_progress');
+        } else if (currentFilter === 'engagement') {
+          events = allEvents.filter(e => e.type === 'engagement');
+        } else if (currentFilter === 'college') {
+          events = allEvents.filter(e => isCollege(e.city));
+        }
+
+        if (events.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="5" class="px-6 py-16 text-center">
+                <div class="text-gray-600 mb-2">
+                  <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                  </svg>
+                </div>
+                <p class="text-gray-500 text-sm">No ${currentFilter === 'all' ? 'activity' : currentFilter.replace('_', ' ')} yet</p>
+              </td>
+            </tr>
+          `;
+        } else {
+          tbody.innerHTML = events.map((e, i) => {
+            const badge = typeBadge[e.type] || typeBadge.pageview;
+            const college = isCollege(e.city);
+            const fl = flag(e.country_code || 'US');
+            const rowBg = i % 2 === 0 ? '' : 'bg-gray-900/30';
+
+            return `
+              <tr class="${rowBg} hover:bg-gray-700/50 transition-colors group">
+                <td class="px-6 py-3.5 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badge.bg} ${badge.text} border ${badge.border}">
+                    ${badge.label}
+                  </span>
+                </td>
+                <td class="px-6 py-3.5 whitespace-nowrap">
+                  <div class="flex items-center gap-2">
+                    <span class="text-base">${fl}</span>
+                    <span class="${college ? 'text-blue-400 font-medium' : 'text-gray-200'}">${e.city}, ${e.region}</span>
+                    ${college ? '<span class="w-1.5 h-1.5 bg-blue-400 rounded-full" title="College Town"></span>' : ''}
+                  </div>
+                </td>
+                <td class="px-6 py-3.5 whitespace-nowrap">
+                  <div class="text-sm">
+                    <span class="text-gray-300">${e.source || 'Direct'}</span>
+                    <span class="text-gray-600 mx-1.5">/</span>
+                    <span class="text-gray-500">${e.device || 'Unknown'}</span>
+                  </div>
+                </td>
+                <td class="px-6 py-3.5 whitespace-nowrap text-right text-sm tabular-nums">
+                  ${e.duration ? `<span class="text-emerald-400 font-medium">${e.duration}</span>` : '<span class="text-gray-700">—</span>'}
+                </td>
+                <td class="px-6 py-3.5 whitespace-nowrap text-right text-sm text-gray-500 tabular-nums" title="${new Date(e.timestamp).toLocaleString()}">
+                  ${ago(e.timestamp)}
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        document.getElementById('showing-count').textContent = events.length;
+        document.getElementById('total-count').textContent = allEvents.length;
       }
 
-      async function loadData() {
-        const key = document.getElementById('key-input').value;
+      async function load() {
+        if (isLocal) { render(MOCK); return; }
+
+        const key = document.getElementById('key')?.value;
         if (!key) return;
 
         try {
-          const res = await fetch(`/api/visits?key=${encodeURIComponent(key)}`);
-          if (!res.ok) {
-            if (res.status === 401) {
-              alert('Invalid access key');
-            }
+          const r = await fetch(`/api/visits?key=${encodeURIComponent(key)}`);
+          if (!r.ok) {
+            if (r.status === 401) alert('Invalid key');
             return;
           }
-
-          const data = await res.json();
-
-          // Show dashboard, hide login
-          document.getElementById('login-section').style.display = 'none';
-          document.getElementById('dashboard').style.display = 'block';
-
-          // Update stats
-          document.getElementById('today-views').textContent = data.summary.todayPageviews;
-          document.getElementById('today-plays').textContent = data.summary.todayVideoPlays;
-          document.getElementById('unique-cities').textContent = data.summary.uniqueCities;
-          document.getElementById('yesterday-views').textContent = data.summary.yesterdayPageviews;
-
-          // Video plays
-          const videoPlaysHtml = data.recentVideoPlays.length > 0
-            ? data.recentVideoPlays.map(play => `
-                <div class="play-item">
-                  <span class="play-location">${play.city || 'Unknown'}, ${play.region || ''}</span>
-                  <span class="play-time">${formatTimeAgo(play.timestamp)} (${play.device})</span>
-                </div>
-              `).join('')
-            : '<p style="color: #64748b; padding: 20px 0;">No video plays yet</p>';
-          document.getElementById('video-plays-list').innerHTML = videoPlaysHtml;
-
-          // Cities
-          const citiesHtml = data.summary.citiesVisited.length > 0
-            ? data.summary.citiesVisited.map(city => `<span class="city-tag">${city}</span>`).join('')
-            : '<span style="color: #64748b;">No cities tracked yet</span>';
-          document.getElementById('cities-list').innerHTML = citiesHtml;
-
-          // Events
-          const eventsHtml = data.todayEvents.length > 0
-            ? data.todayEvents.map(event => `
-                <div class="event-row">
-                  <span class="event-type ${event.type}">${event.type}</span>
-                  <span>${event.city || 'Unknown'}, ${event.region || ''}</span>
-                  <span style="color: #64748b;">${formatTime(event.timestamp)}</span>
-                </div>
-              `).join('')
-            : '<div class="loading">No events today yet</div>';
-          document.getElementById('events-list').innerHTML = eventsHtml;
-
-          // Save key for refresh
-          sessionStorage.setItem('apuKey', key);
-
-        } catch (err) {
-          console.error(err);
+          const d = await r.json();
+          document.getElementById('login').classList.add('hidden');
+          document.getElementById('dash').classList.remove('hidden');
+          render(d);
+          sessionStorage.setItem('k', key);
+        } catch (e) {
+          console.error(e);
           alert('Error loading data');
         }
       }
 
-      // Auto-load if key is saved
-      window.onload = function() {
-        const savedKey = sessionStorage.getItem('apuKey');
-        if (savedKey) {
-          document.getElementById('key-input').value = savedKey;
-          loadData();
+      window.onload = () => {
+        if (isLocal) { load(); return; }
+        const k = sessionStorage.getItem('k');
+        if (k) {
+          document.getElementById('key').value = k;
+          load();
         }
-
-        // Enter key to submit
-        document.getElementById('key-input').addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') loadData();
+        document.getElementById('key')?.addEventListener('keypress', e => {
+          if (e.key === 'Enter') load();
         });
       };
     </script>
