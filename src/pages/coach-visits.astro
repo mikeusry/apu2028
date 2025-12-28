@@ -1,0 +1,276 @@
+---
+// Coach visits dashboard - shows who's been looking at the site
+// Access at: aynparkerusry.com/coach-visits?key=YOUR_KEY
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Coach Visits | Ayn Parker Usry</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 20px;
+        min-height: 100vh;
+      }
+      .container { max-width: 900px; margin: 0 auto; }
+      h1 { font-size: 1.5rem; margin-bottom: 20px; color: #fff; }
+      h2 { font-size: 1.1rem; margin: 20px 0 10px; color: #94a3b8; }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .stat-card {
+        background: #1e293b;
+        padding: 16px;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .stat-value { font-size: 2rem; font-weight: bold; color: #22d3ee; }
+      .stat-label { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
+
+      .video-plays {
+        background: #1e293b;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 24px;
+      }
+      .video-plays h2 { margin-top: 0; color: #22d3ee; }
+      .play-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #334155;
+      }
+      .play-item:last-child { border-bottom: none; }
+      .play-location { font-weight: 600; }
+      .play-time { color: #64748b; font-size: 0.85rem; }
+
+      .events-list {
+        background: #1e293b;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .event-row {
+        display: grid;
+        grid-template-columns: 100px 1fr 120px;
+        padding: 10px 16px;
+        border-bottom: 1px solid #334155;
+        font-size: 0.85rem;
+      }
+      .event-row:last-child { border-bottom: none; }
+      .event-type {
+        background: #334155;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        width: fit-content;
+      }
+      .event-type.video_play { background: #22d3ee; color: #0f172a; }
+
+      .cities-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .city-tag {
+        background: #334155;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+      }
+
+      .login-form {
+        max-width: 300px;
+        margin: 100px auto;
+        text-align: center;
+      }
+      .login-form input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #334155;
+        border-radius: 6px;
+        background: #1e293b;
+        color: #fff;
+        margin-bottom: 12px;
+      }
+      .login-form button {
+        width: 100%;
+        padding: 12px;
+        background: #22d3ee;
+        color: #0f172a;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .loading { text-align: center; padding: 40px; color: #64748b; }
+      .error { color: #f87171; text-align: center; padding: 20px; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="login-section" class="login-form">
+        <h1>Coach Visits</h1>
+        <p style="color: #64748b; margin-bottom: 20px;">Enter the access key to view visit data</p>
+        <input type="password" id="key-input" placeholder="Access Key" />
+        <button onclick="loadData()">View Visits</button>
+      </div>
+
+      <div id="dashboard" style="display: none;">
+        <h1>Who's Watching Ayn?</h1>
+
+        <div class="stats-grid" id="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="today-views">-</div>
+            <div class="stat-label">Today's Views</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="today-plays">-</div>
+            <div class="stat-label">Video Plays Today</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="unique-cities">-</div>
+            <div class="stat-label">Unique Cities</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="yesterday-views">-</div>
+            <div class="stat-label">Yesterday's Views</div>
+          </div>
+        </div>
+
+        <div class="video-plays">
+          <h2>Recent Video Plays</h2>
+          <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 12px;">Coaches who watched the highlight reel</p>
+          <div id="video-plays-list">
+            <div class="loading">Loading...</div>
+          </div>
+        </div>
+
+        <h2>Cities Visited From</h2>
+        <div class="cities-list" id="cities-list"></div>
+
+        <h2 style="margin-top: 24px;">Today's Activity</h2>
+        <div class="events-list" id="events-list">
+          <div class="loading">Loading...</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function formatTime(isoString) {
+        const date = new Date(isoString);
+        return date.toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        });
+      }
+
+      function formatTimeAgo(isoString) {
+        const date = new Date(isoString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMins / 60);
+        const diffDays = Math.floor(diffHours / 24);
+
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffHours < 24) return `${diffHours}h ago`;
+        return `${diffDays}d ago`;
+      }
+
+      async function loadData() {
+        const key = document.getElementById('key-input').value;
+        if (!key) return;
+
+        try {
+          const res = await fetch(`/api/visits?key=${encodeURIComponent(key)}`);
+          if (!res.ok) {
+            if (res.status === 401) {
+              alert('Invalid access key');
+            }
+            return;
+          }
+
+          const data = await res.json();
+
+          // Show dashboard, hide login
+          document.getElementById('login-section').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+
+          // Update stats
+          document.getElementById('today-views').textContent = data.summary.todayPageviews;
+          document.getElementById('today-plays').textContent = data.summary.todayVideoPlays;
+          document.getElementById('unique-cities').textContent = data.summary.uniqueCities;
+          document.getElementById('yesterday-views').textContent = data.summary.yesterdayPageviews;
+
+          // Video plays
+          const videoPlaysHtml = data.recentVideoPlays.length > 0
+            ? data.recentVideoPlays.map(play => `
+                <div class="play-item">
+                  <span class="play-location">${play.city || 'Unknown'}, ${play.region || ''}</span>
+                  <span class="play-time">${formatTimeAgo(play.timestamp)} (${play.device})</span>
+                </div>
+              `).join('')
+            : '<p style="color: #64748b; padding: 20px 0;">No video plays yet</p>';
+          document.getElementById('video-plays-list').innerHTML = videoPlaysHtml;
+
+          // Cities
+          const citiesHtml = data.summary.citiesVisited.length > 0
+            ? data.summary.citiesVisited.map(city => `<span class="city-tag">${city}</span>`).join('')
+            : '<span style="color: #64748b;">No cities tracked yet</span>';
+          document.getElementById('cities-list').innerHTML = citiesHtml;
+
+          // Events
+          const eventsHtml = data.todayEvents.length > 0
+            ? data.todayEvents.map(event => `
+                <div class="event-row">
+                  <span class="event-type ${event.type}">${event.type}</span>
+                  <span>${event.city || 'Unknown'}, ${event.region || ''}</span>
+                  <span style="color: #64748b;">${formatTime(event.timestamp)}</span>
+                </div>
+              `).join('')
+            : '<div class="loading">No events today yet</div>';
+          document.getElementById('events-list').innerHTML = eventsHtml;
+
+          // Save key for refresh
+          sessionStorage.setItem('apuKey', key);
+
+        } catch (err) {
+          console.error(err);
+          alert('Error loading data');
+        }
+      }
+
+      // Auto-load if key is saved
+      window.onload = function() {
+        const savedKey = sessionStorage.getItem('apuKey');
+        if (savedKey) {
+          document.getElementById('key-input').value = savedKey;
+          loadData();
+        }
+
+        // Enter key to submit
+        document.getElementById('key-input').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') loadData();
+        });
+      };
+    </script>
+  </body>
+</html>
