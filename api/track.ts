@@ -13,9 +13,29 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { kv } from '@vercel/kv';
 
+// UTM parameters for campaign attribution
+interface UtmParams {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
+}
+
+// All supported event types
+type EventType =
+  | 'pageview'
+  | 'video_play'
+  | 'video_progress'
+  | 'resume_download'
+  | 'schedule_view'
+  | 'coach_email_click'
+  | 'contact_form_submit'
+  | 'section_view';
+
 interface TrackingEvent {
   id: string;
-  type: 'pageview' | 'video_play' | 'video_progress';
+  type: EventType;
   timestamp: string;
   // Geo data (from Vercel headers)
   city: string | null;
@@ -30,6 +50,14 @@ interface TrackingEvent {
   // Device info
   userAgent: string | null;
   device: 'mobile' | 'tablet' | 'desktop';
+  // UTM params (optional)
+  utm?: UtmParams;
+  // Event-specific metadata
+  format?: string; // for resume_download
+  tournament?: string; // for schedule_view
+  emailType?: string; // for coach_email_click
+  formType?: string; // for contact_form_submit
+  section?: string; // for section_view
 }
 
 function generateId(): string {
@@ -81,7 +109,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       videoId: body.videoId || undefined,
       videoProgress: body.videoProgress || undefined,
       userAgent: userAgent,
-      device: detectDevice(userAgent)
+      device: detectDevice(userAgent),
+      // UTM params
+      utm: body.utm || undefined,
+      // Event-specific metadata
+      format: body.format || undefined,
+      tournament: body.tournament || undefined,
+      emailType: body.emailType || undefined,
+      formType: body.formType || undefined,
+      section: body.section || undefined
     };
 
     // Store in Vercel KV
@@ -103,13 +139,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         city: event.city,
         region: event.region,
         timestamp: event.timestamp,
-        device: event.device
+        device: event.device,
+        utm: event.utm
       }));
       // Trim to last 500 video plays
       await kv.ltrim('video_plays', 0, 499);
     }
 
-    console.log(`[APU Tracker] ${event.type} from ${decodedCity || 'Unknown'}, ${region || ''} ${country || ''}`);
+    // Track high-value engagement events separately
+    const highValueEvents = ['resume_download', 'coach_email_click', 'contact_form_submit'];
+    if (highValueEvents.includes(event.type) && event.city) {
+      await kv.lpush('high_value_events', JSON.stringify({
+        type: event.type,
+        city: event.city,
+        region: event.region,
+        timestamp: event.timestamp,
+        device: event.device,
+        utm: event.utm,
+        metadata: {
+          format: event.format,
+          emailType: event.emailType,
+          formType: event.formType
+        }
+      }));
+      // Trim to last 200 high-value events
+      await kv.ltrim('high_value_events', 0, 199);
+    }
+
+    // Track UTM sources separately for analytics
+    if (event.utm?.utm_source) {
+      const utmKey = `utm:${dateKey}:${event.utm.utm_source}`;
+      await kv.incr(utmKey);
+      // Set expiry on first increment
+      await kv.expire(utmKey, 60 * 60 * 24 * 90); // 90 days
+    }
+
+    // Build log message
+    const utmInfo = event.utm?.utm_source ? ` [utm_source=${event.utm.utm_source}]` : '';
+    console.log(`[APU Tracker] ${event.type} from ${decodedCity || 'Unknown'}, ${region || ''} ${country || ''}${utmInfo}`);
 
     return res.status(200).json({ ok: true, id: event.id });
 

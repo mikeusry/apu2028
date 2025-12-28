@@ -114,8 +114,11 @@ const isLocal = import.meta.env.DEV;
         </div>
       </div>
 
-      <!-- College Towns Pills -->
-      <div id="college-towns" class="flex flex-wrap gap-2 mb-6"></div>
+      <!-- UTM Sources + College Towns Pills -->
+      <div class="flex flex-wrap gap-4 mb-6">
+        <div id="utm-sources" class="flex flex-wrap items-center gap-2"></div>
+        <div id="college-towns" class="flex flex-wrap items-center gap-2"></div>
+      </div>
 
       <!-- Activity Table -->
       <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow-xl shadow-black/20">
@@ -136,12 +139,15 @@ const isLocal = import.meta.env.DEV;
             </button>
           </div>
           <!-- Filter buttons -->
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
             <button onclick="setFilter('all')" data-filter="all" class="filter-btn active px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700 text-white">
               All
             </button>
             <button onclick="setFilter('video_play')" data-filter="video_play" class="filter-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">
               Videos
+            </button>
+            <button onclick="setFilter('high_value')" data-filter="high_value" class="filter-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700/50 text-purple-400 hover:bg-purple-700/30 hover:text-purple-300 transition-colors border border-purple-500/30">
+              High Value
             </button>
             <button onclick="setFilter('engagement')" data-filter="engagement" class="filter-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">
               30s+ Only
@@ -186,20 +192,29 @@ const isLocal = import.meta.env.DEV;
           todayVideoPlays: 5,
           uniqueCities: 12,
           totalEngagements: 4,
-          citiesVisited: ['Tallahassee, FL','Knoxville, TN','Athens, GA','Gainesville, FL','Starkville, MS','Auburn, AL','Atlanta, GA','Birmingham, AL']
+          citiesVisited: ['Tallahassee, FL','Knoxville, TN','Athens, GA','Gainesville, FL','Starkville, MS','Auburn, AL','Atlanta, GA','Birmingham, AL'],
+          utmSources: { twitter: 4, email: 2, instagram: 3 },
+          highValueCounts: { resume_download: 2, coach_email_click: 1 }
         },
+        highValueEvents: [
+          { type: 'resume_download', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-3600000).toISOString(), device: 'Desktop', utm: { utm_source: 'email', utm_campaign: 'coach_outreach' } },
+          { type: 'coach_email_click', city: 'Knoxville', region: 'TN', timestamp: new Date(Date.now()-7200000).toISOString(), device: 'Desktop', metadata: { emailType: 'player' } }
+        ],
         todayEvents: [
-          { type: 'video_play', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1800000).toISOString(), device: 'Desktop', page: '/', duration: '3:42', country_code: 'US', source: 'Direct' },
-          { type: 'engagement', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1850000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', source: 'Direct' },
-          { type: 'pageview', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1900000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', source: 'Google' },
-          { type: 'video_play', city: 'Knoxville', region: 'TN', timestamp: new Date(Date.now()-5400000).toISOString(), device: 'Desktop', page: '/', duration: '2:15', country_code: 'US', source: 'Twitter' },
-          { type: 'pageview', city: 'Knoxville', region: 'TN', timestamp: new Date(Date.now()-5500000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', source: 'Twitter' },
-          { type: 'video_progress', city: 'Athens', region: 'GA', timestamp: new Date(Date.now()-10800000).toISOString(), device: 'Mobile', page: '/', duration: '1:30', country_code: 'US', source: 'Instagram' },
-          { type: 'pageview', city: 'Athens', region: 'GA', timestamp: new Date(Date.now()-10900000).toISOString(), device: 'Mobile', page: '/', country_code: 'US', source: 'Instagram' },
-          { type: 'pageview', city: 'Auburn', region: 'AL', timestamp: new Date(Date.now()-28800000).toISOString(), device: 'Tablet', page: '/', country_code: 'US', source: 'Direct' },
-          { type: 'video_play', city: 'Gainesville', region: 'FL', timestamp: new Date(Date.now()-36000000).toISOString(), device: 'Desktop', page: '/', duration: '4:22', country_code: 'US', source: 'Google' },
-          { type: 'pageview', city: 'Atlanta', region: 'GA', timestamp: new Date(Date.now()-43200000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', source: 'Direct' },
-          { type: 'pageview', city: 'Starkville', region: 'MS', timestamp: new Date(Date.now()-50000000).toISOString(), device: 'Mobile', page: '/', country_code: 'US', source: 'Twitter' },
+          { type: 'video_play', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1800000).toISOString(), device: 'Desktop', page: '/', duration: '3:42', country_code: 'US', utm: { utm_source: 'email' } },
+          { type: 'engagement', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1850000).toISOString(), device: 'Desktop', page: '/', country_code: 'US' },
+          { type: 'resume_download', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1870000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', utm: { utm_source: 'email' } },
+          { type: 'pageview', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1900000).toISOString(), device: 'Desktop', page: '/', country_code: 'US' },
+          { type: 'video_play', city: 'Knoxville', region: 'TN', timestamp: new Date(Date.now()-5400000).toISOString(), device: 'Desktop', page: '/', duration: '2:15', country_code: 'US', utm: { utm_source: 'twitter' } },
+          { type: 'coach_email_click', city: 'Knoxville', region: 'TN', timestamp: new Date(Date.now()-5450000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', utm: { utm_source: 'twitter' } },
+          { type: 'pageview', city: 'Knoxville', region: 'TN', timestamp: new Date(Date.now()-5500000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', utm: { utm_source: 'twitter' } },
+          { type: 'video_progress', city: 'Athens', region: 'GA', timestamp: new Date(Date.now()-10800000).toISOString(), device: 'Mobile', page: '/', duration: '1:30', country_code: 'US', utm: { utm_source: 'instagram' } },
+          { type: 'schedule_view', city: 'Athens', region: 'GA', timestamp: new Date(Date.now()-10850000).toISOString(), device: 'Mobile', page: '/', country_code: 'US', utm: { utm_source: 'instagram' } },
+          { type: 'pageview', city: 'Athens', region: 'GA', timestamp: new Date(Date.now()-10900000).toISOString(), device: 'Mobile', page: '/', country_code: 'US', utm: { utm_source: 'instagram' } },
+          { type: 'pageview', city: 'Auburn', region: 'AL', timestamp: new Date(Date.now()-28800000).toISOString(), device: 'Tablet', page: '/', country_code: 'US' },
+          { type: 'video_play', city: 'Gainesville', region: 'FL', timestamp: new Date(Date.now()-36000000).toISOString(), device: 'Desktop', page: '/', duration: '4:22', country_code: 'US' },
+          { type: 'pageview', city: 'Atlanta', region: 'GA', timestamp: new Date(Date.now()-43200000).toISOString(), device: 'Desktop', page: '/', country_code: 'US' },
+          { type: 'pageview', city: 'Starkville', region: 'MS', timestamp: new Date(Date.now()-50000000).toISOString(), device: 'Mobile', page: '/', country_code: 'US', utm: { utm_source: 'twitter' } },
         ]
       };
 
@@ -225,7 +240,12 @@ const isLocal = import.meta.env.DEV;
         pageview: { label: 'View', bg: 'bg-gray-500/10', text: 'text-gray-400', border: 'border-gray-500/20' },
         video_play: { label: 'Video', bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/20' },
         video_progress: { label: 'Watch', bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
-        engagement: { label: '30s+', bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20' }
+        engagement: { label: '30s+', bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20' },
+        resume_download: { label: 'Resume', bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/20' },
+        coach_email_click: { label: 'Email', bg: 'bg-pink-500/10', text: 'text-pink-400', border: 'border-pink-500/20' },
+        schedule_view: { label: 'Schedule', bg: 'bg-cyan-500/10', text: 'text-cyan-400', border: 'border-cyan-500/20' },
+        section_view: { label: 'Section', bg: 'bg-gray-500/10', text: 'text-gray-400', border: 'border-gray-500/20' },
+        contact_form_submit: { label: 'Form', bg: 'bg-rose-500/10', text: 'text-rose-400', border: 'border-rose-500/20' }
       };
 
       let isLive = true;
@@ -272,11 +292,36 @@ const isLocal = import.meta.env.DEV;
         document.getElementById('stat-plays').textContent = d.summary.todayVideoPlays;
         document.getElementById('stat-engaged').textContent = d.summary.totalEngagements || 0;
 
+        // UTM Sources pills
+        const utmEl = document.getElementById('utm-sources');
+        const utmSources = d.summary.utmSources || {};
+        const utmEntries = Object.entries(utmSources).sort((a, b) => b[1] - a[1]);
+        if (utmEntries.length > 0) {
+          utmEl.innerHTML = '<span class="text-xs text-gray-500 uppercase tracking-wider mr-1">Sources:</span>' +
+            utmEntries.map(([source, count]) => {
+              const colors = {
+                email: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+                twitter: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
+                instagram: 'bg-pink-500/10 text-pink-400 border-pink-500/20',
+                google: 'bg-red-500/10 text-red-400 border-red-500/20'
+              };
+              const color = colors[source.toLowerCase()] || 'bg-gray-500/10 text-gray-400 border-gray-500/20';
+              return `<span class="px-2.5 py-1 text-xs font-medium ${color} border rounded-full">${source} (${count})</span>`;
+            }).join('');
+        } else {
+          utmEl.innerHTML = '';
+        }
+
         // College town pills
         const townsEl = document.getElementById('college-towns');
-        townsEl.innerHTML = collegeTowns.map(t =>
-          `<span class="px-3 py-1 text-sm font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full">${t}</span>`
-        ).join('');
+        if (collegeTowns.length > 0) {
+          townsEl.innerHTML = '<span class="text-xs text-gray-500 uppercase tracking-wider mr-1">Colleges:</span>' +
+            collegeTowns.map(t =>
+              `<span class="px-2.5 py-1 text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full">${t}</span>`
+            ).join('');
+        } else {
+          townsEl.innerHTML = '';
+        }
 
         // Feed table
         const tbody = document.getElementById('feed-body');
@@ -286,6 +331,8 @@ const isLocal = import.meta.env.DEV;
         let events = allEvents;
         if (currentFilter === 'video_play') {
           events = allEvents.filter(e => e.type === 'video_play' || e.type === 'video_progress');
+        } else if (currentFilter === 'high_value') {
+          events = allEvents.filter(e => ['resume_download', 'coach_email_click', 'contact_form_submit'].includes(e.type));
         } else if (currentFilter === 'engagement') {
           events = allEvents.filter(e => e.type === 'engagement');
         } else if (currentFilter === 'college') {
@@ -309,11 +356,17 @@ const isLocal = import.meta.env.DEV;
           tbody.innerHTML = events.map((e, i) => {
             const badge = typeBadge[e.type] || typeBadge.pageview;
             const college = isCollege(e.city);
-            const fl = flag(e.country_code || 'US');
+            const fl = flag(e.country_code || e.country || 'US');
             const rowBg = i % 2 === 0 ? '' : 'bg-gray-900/30';
+            // Get source from UTM params or referrer
+            const source = e.utm?.utm_source || e.source || (e.referrer ? 'Referral' : 'Direct');
+            const campaign = e.utm?.utm_campaign;
+            // Highlight high-value events
+            const isHighValue = ['resume_download', 'coach_email_click', 'contact_form_submit'].includes(e.type);
+            const rowHighlight = isHighValue ? 'border-l-2 border-l-purple-500' : '';
 
             return `
-              <tr class="${rowBg} hover:bg-gray-700/50 transition-colors group">
+              <tr class="${rowBg} ${rowHighlight} hover:bg-gray-700/50 transition-colors group">
                 <td class="px-6 py-3.5 whitespace-nowrap">
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badge.bg} ${badge.text} border ${badge.border}">
                     ${badge.label}
@@ -322,13 +375,14 @@ const isLocal = import.meta.env.DEV;
                 <td class="px-6 py-3.5 whitespace-nowrap">
                   <div class="flex items-center gap-2">
                     <span class="text-base">${fl}</span>
-                    <span class="${college ? 'text-blue-400 font-medium' : 'text-gray-200'}">${e.city}, ${e.region}</span>
+                    <span class="${college ? 'text-blue-400 font-medium' : 'text-gray-200'}">${e.city || 'Unknown'}, ${e.region || ''}</span>
                     ${college ? '<span class="w-1.5 h-1.5 bg-blue-400 rounded-full" title="College Town"></span>' : ''}
                   </div>
                 </td>
                 <td class="px-6 py-3.5 whitespace-nowrap">
                   <div class="text-sm">
-                    <span class="text-gray-300">${e.source || 'Direct'}</span>
+                    <span class="${e.utm?.utm_source ? 'text-purple-400 font-medium' : 'text-gray-300'}">${source}</span>
+                    ${campaign ? `<span class="text-gray-600 text-xs ml-1">(${campaign})</span>` : ''}
                     <span class="text-gray-600 mx-1.5">/</span>
                     <span class="text-gray-500">${e.device || 'Unknown'}</span>
                   </div>

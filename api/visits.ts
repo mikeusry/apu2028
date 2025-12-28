@@ -31,6 +31,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return v;
     });
 
+    // Get high-value events (resume downloads, email clicks, form submissions)
+    const highValueEvents = await kv.lrange('high_value_events', 0, 49);
+    const parsedHighValueEvents = highValueEvents.map((v: string | object) => {
+      if (typeof v === 'string') {
+        try {
+          return JSON.parse(v);
+        } catch {
+          return v;
+        }
+      }
+      return v;
+    });
+
     // Get today's events
     const today = new Date().toISOString().split('T')[0];
     const todayEventIds = await kv.zrange(`events:${today}`, 0, -1);
@@ -58,6 +71,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const uniqueCities = [...new Set(allEvents.map((e: any) => e.city).filter(Boolean))];
     const videoPlayCount = allEvents.filter((e: any) => e.type === 'video_play').length;
 
+    // Count events by UTM source
+    const utmSources: Record<string, number> = {};
+    allEvents.forEach((e: any) => {
+      if (e.utm?.utm_source) {
+        utmSources[e.utm.utm_source] = (utmSources[e.utm.utm_source] || 0) + 1;
+      }
+    });
+
+    // Count high-value event types
+    const highValueCounts: Record<string, number> = {};
+    parsedHighValueEvents.forEach((e: any) => {
+      if (e.type) {
+        highValueCounts[e.type] = (highValueCounts[e.type] || 0) + 1;
+      }
+    });
+
     return res.status(200).json({
       summary: {
         todayPageviews: todayEvents.filter((e: any) => e.type === 'pageview').length,
@@ -65,9 +94,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         yesterdayPageviews: yesterdayEvents.filter((e: any) => e.type === 'pageview').length,
         yesterdayVideoPlays: yesterdayEvents.filter((e: any) => e.type === 'video_play').length,
         uniqueCities: uniqueCities.length,
-        citiesVisited: uniqueCities.slice(0, 20) // Top 20 cities
+        citiesVisited: uniqueCities.slice(0, 20), // Top 20 cities
+        utmSources: utmSources, // Breakdown by UTM source
+        highValueCounts: highValueCounts // Counts of resume downloads, email clicks, etc.
       },
       recentVideoPlays: parsedVideoPlays.slice(0, 20),
+      highValueEvents: parsedHighValueEvents.slice(0, 20), // Resume downloads, email clicks, etc.
       todayEvents: todayEvents.slice(-30).reverse(), // Most recent first
       yesterdayEvents: yesterdayEvents.slice(-30).reverse()
     });

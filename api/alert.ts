@@ -9,6 +9,14 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import sgMail from '@sendgrid/mail';
 import { kv } from '@vercel/kv';
 
+interface UtmParams {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
+}
+
 interface EngagementData {
   timeOnSite: number; // seconds
   pagesViewed: string[];
@@ -19,6 +27,7 @@ interface EngagementData {
   country: string | null;
   device: string;
   referrer: string | null;
+  utm?: UtmParams;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -87,7 +96,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ? body.pagesViewed.join(' → ')
       : 'Homepage only';
 
-    const subject = `🥎 Coach Interest Alert: ${decodedCity}, ${decodedRegion || country || 'Unknown'}`;
+    // Build UTM attribution string
+    const utmSource = body.utm?.utm_source;
+    const utmCampaign = body.utm?.utm_campaign;
+    const utmStr = utmSource
+      ? `${utmSource}${utmCampaign ? ` (${utmCampaign})` : ''}`
+      : null;
+
+    const subject = `🥎 Coach Interest Alert: ${decodedCity}, ${decodedRegion || country || 'Unknown'}${utmSource ? ` via ${utmSource}` : ''}`;
 
     const htmlBody = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 500px; margin: 0 auto;">
@@ -125,6 +141,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               <td style="padding: 8px 0; color: #0f172a; font-size: 13px;">${body.referrer}</td>
             </tr>
             ` : ''}
+            ${utmStr ? `
+            <tr>
+              <td style="padding: 8px 0; color: #64748b;">Campaign</td>
+              <td style="padding: 8px 0; font-weight: 600; color: #8b5cf6;">${utmStr}</td>
+            </tr>
+            ` : ''}
           </table>
         </div>
 
@@ -143,6 +165,7 @@ Watched Video: ${videoStatus}
 Device: ${body.device || 'Unknown'}
 Pages: ${pagesStr}
 ${body.referrer ? `Came From: ${body.referrer}` : ''}
+${utmStr ? `Campaign: ${utmStr}` : ''}
 
 View all visits: https://aynparkerusry.com/coach-visits
     `.trim();
