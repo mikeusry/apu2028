@@ -183,13 +183,18 @@
   // Set up video tracking
   function setupVideoTracking() {
     const videos = document.querySelectorAll('video');
+    console.log('[APU Tracker] Found', videos.length, 'video element(s)');
 
     videos.forEach((video, index) => {
-      const videoId = video.dataset.videoId || video.src || `video-${index}`;
+      // Get video ID from data attribute, video src, source element, or fallback to index
+      const sourceEl = video.querySelector('source');
+      const videoId = video.dataset.videoId || video.src || (sourceEl && sourceEl.src) || `video-${index}`;
       const progressMilestones = new Set();
+      console.log('[APU Tracker] Tracking video:', videoId);
 
       // Track play
       video.addEventListener('play', function() {
+        console.log('[APU Tracker] Video play detected:', videoId);
         trackVideoPlay(videoId);
       });
 
