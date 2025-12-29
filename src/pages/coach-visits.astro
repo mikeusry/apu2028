@@ -185,7 +185,7 @@ const isLocal = import.meta.env.DEV;
       </div>
     </div>
 
-    <script define:vars={{ isLocal }}>
+    <script is:inline define:vars={{ isLocal }}>
       // Empty mock data - real data comes from /api/visits in production
       const MOCK = {
         summary: {
@@ -235,7 +235,7 @@ const isLocal = import.meta.env.DEV;
       let currentFilter = 'all';
       let allData = null;
 
-      window.toggleLive = function() {
+      function toggleLive() {
         isLive = !isLive;
         const btn = document.getElementById('live-btn');
         const dot = document.getElementById('live-dot');
@@ -250,9 +250,9 @@ const isLocal = import.meta.env.DEV;
           dot.className = 'w-2 h-2 rounded-full bg-gray-500';
           txt.textContent = 'Paused';
         }
-      };
+      }
 
-      window.setFilter = function(filter) {
+      function setFilter(filter) {
         currentFilter = filter;
         // Update button styles
         document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -263,7 +263,7 @@ const isLocal = import.meta.env.DEV;
           }
         });
         if (allData) render(allData);
-      };
+      }
 
       function render(d) {
         allData = d;
@@ -385,7 +385,7 @@ const isLocal = import.meta.env.DEV;
         document.getElementById('total-count').textContent = allEvents.length;
       }
 
-      window.load = async function() {
+      async function load() {
         if (isLocal) { render(MOCK); return; }
 
         const key = document.getElementById('key')?.value;
@@ -406,17 +406,17 @@ const isLocal = import.meta.env.DEV;
           console.error(e);
           alert('Error loading data');
         }
-      };
+      }
 
       window.onload = () => {
-        if (isLocal) { window.load(); return; }
+        if (isLocal) { load(); return; }
         const k = sessionStorage.getItem('k');
         if (k) {
           document.getElementById('key').value = k;
-          window.load();
+          load();
         }
         document.getElementById('key')?.addEventListener('keypress', e => {
-          if (e.key === 'Enter') window.load();
+          if (e.key === 'Enter') load();
         });
       };
     </script>
