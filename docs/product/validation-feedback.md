@@ -80,6 +80,8 @@
 | Adrian Diaz | Team Coach | Pending | - | - |
 | Matt Cronin | Parent (2029 Mid-Major) | Pending | - | - |
 | Matt Thomas | Parent (2029 Power 4) | Pending | - | - |
+| Matt Gillespie | College Parent (Portal) | Pending | - | - |
+| Jeff Harvey | College Parent (Coaching Change) | Pending | - | - |
 
 ### Pending Parent Details
 
@@ -92,6 +94,17 @@
 - Profile: Power 4 catcher, projecting SEC/ACC
 - Goal: Elite program placement
 - Why valuable: Tests whether discovery is a problem even for elite prospects, or if they're already well-served by existing networks.
+
+### Pending College Parent Details (Hindsight + Portal)
+
+**Matt Gillespie** - Daughter: Madi Gillespie
+- Path: Campbell → Georgia Southern (transfer portal)
+- Why valuable: Lived the portal experience. Discovery problem happens TWICE - initial recruiting AND when you need to find a new home. What did they wish they knew?
+
+**Jeff Harvey** - Daughter: Hannah Harvey
+- School: Kennesaw State (Texas family)
+- Context: Recent coaching change, considered portal but stayed
+- Why valuable: Made the "stay or go" decision with incomplete info. What would have helped them evaluate other options when coaching changed?
 
 ---
 
@@ -117,6 +130,7 @@
 2. **Honest representation** - Trust/authenticity matters
 3. **Decision support** - Not just info, but guidance on WHEN to act
 4. **"Missing pieces"** - Joe has specific ideas (capture on call)
+5. **Portal = second discovery moment** - When coaching changes or fit breaks, families need to re-discover options fast (Gillespie, Harvey)
 
 ---
 
