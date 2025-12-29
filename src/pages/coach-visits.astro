@@ -186,36 +186,19 @@ const isLocal = import.meta.env.DEV;
     </div>
 
     <script define:vars={{ isLocal }}>
+      // Empty mock data - real data comes from /api/visits in production
       const MOCK = {
         summary: {
-          todayPageviews: 18,
-          todayVideoPlays: 5,
-          uniqueCities: 12,
-          totalEngagements: 4,
-          citiesVisited: ['Tallahassee, FL','Knoxville, TN','Athens, GA','Gainesville, FL','Starkville, MS','Auburn, AL','Atlanta, GA','Birmingham, AL'],
-          utmSources: { twitter: 4, email: 2, instagram: 3 },
-          highValueCounts: { resume_download: 2, coach_email_click: 1 }
+          todayPageviews: 0,
+          todayVideoPlays: 0,
+          uniqueCities: 0,
+          totalEngagements: 0,
+          citiesVisited: [],
+          utmSources: {},
+          highValueCounts: {}
         },
-        highValueEvents: [
-          { type: 'resume_download', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-3600000).toISOString(), device: 'Desktop', utm: { utm_source: 'email', utm_campaign: 'coach_outreach' } },
-          { type: 'coach_email_click', city: 'Knoxville', region: 'TN', timestamp: new Date(Date.now()-7200000).toISOString(), device: 'Desktop', metadata: { emailType: 'player' } }
-        ],
-        todayEvents: [
-          { type: 'video_play', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1800000).toISOString(), device: 'Desktop', page: '/', duration: '3:42', country_code: 'US', utm: { utm_source: 'email' } },
-          { type: 'engagement', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1850000).toISOString(), device: 'Desktop', page: '/', country_code: 'US' },
-          { type: 'resume_download', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1870000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', utm: { utm_source: 'email' } },
-          { type: 'pageview', city: 'Tallahassee', region: 'FL', timestamp: new Date(Date.now()-1900000).toISOString(), device: 'Desktop', page: '/', country_code: 'US' },
-          { type: 'video_play', city: 'Knoxville', region: 'TN', timestamp: new Date(Date.now()-5400000).toISOString(), device: 'Desktop', page: '/', duration: '2:15', country_code: 'US', utm: { utm_source: 'twitter' } },
-          { type: 'coach_email_click', city: 'Knoxville', region: 'TN', timestamp: new Date(Date.now()-5450000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', utm: { utm_source: 'twitter' } },
-          { type: 'pageview', city: 'Knoxville', region: 'TN', timestamp: new Date(Date.now()-5500000).toISOString(), device: 'Desktop', page: '/', country_code: 'US', utm: { utm_source: 'twitter' } },
-          { type: 'video_progress', city: 'Athens', region: 'GA', timestamp: new Date(Date.now()-10800000).toISOString(), device: 'Mobile', page: '/', duration: '1:30', country_code: 'US', utm: { utm_source: 'instagram' } },
-          { type: 'schedule_view', city: 'Athens', region: 'GA', timestamp: new Date(Date.now()-10850000).toISOString(), device: 'Mobile', page: '/', country_code: 'US', utm: { utm_source: 'instagram' } },
-          { type: 'pageview', city: 'Athens', region: 'GA', timestamp: new Date(Date.now()-10900000).toISOString(), device: 'Mobile', page: '/', country_code: 'US', utm: { utm_source: 'instagram' } },
-          { type: 'pageview', city: 'Auburn', region: 'AL', timestamp: new Date(Date.now()-28800000).toISOString(), device: 'Tablet', page: '/', country_code: 'US' },
-          { type: 'video_play', city: 'Gainesville', region: 'FL', timestamp: new Date(Date.now()-36000000).toISOString(), device: 'Desktop', page: '/', duration: '4:22', country_code: 'US' },
-          { type: 'pageview', city: 'Atlanta', region: 'GA', timestamp: new Date(Date.now()-43200000).toISOString(), device: 'Desktop', page: '/', country_code: 'US' },
-          { type: 'pageview', city: 'Starkville', region: 'MS', timestamp: new Date(Date.now()-50000000).toISOString(), device: 'Mobile', page: '/', country_code: 'US', utm: { utm_source: 'twitter' } },
-        ]
+        highValueEvents: [],
+        todayEvents: []
       };
 
       const COLLEGES = ['Tallahassee','Gainesville','Knoxville','Athens','Auburn','Starkville','Columbia','Clemson','Tuscaloosa','Lexington','Louisville','Nashville','Boone','Cullowhee','Charleston','Greenville','Spartanburg','Kennesaw','Jacksonville','Tampa','Orlando','Lynchburg','Blacksburg','Charlottesville','Baton Rouge','College Station','Norman','Stillwater','Fayetteville','Oxford'];
