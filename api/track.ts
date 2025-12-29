@@ -87,12 +87,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const body = req.body || {};
+    const userAgent = req.headers['user-agent'] as string || '';
+
+    // Ignore Vercel's screenshot bot
+    if (userAgent.includes('vercel-screenshot')) {
+      return res.status(200).json({ ok: true, ignored: true });
+    }
 
     // Get geo data from Vercel headers (automatically populated)
     const city = req.headers['x-vercel-ip-city'] as string || null;
     const region = req.headers['x-vercel-ip-country-region'] as string || null;
     const country = req.headers['x-vercel-ip-country'] as string || null;
-    const userAgent = req.headers['user-agent'] as string || null;
 
     // Decode city (comes URL encoded)
     const decodedCity = city ? decodeURIComponent(city) : null;
