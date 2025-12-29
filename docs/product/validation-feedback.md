@@ -39,12 +39,44 @@
 
 ---
 
+## Joe Walker | Stars National Organization
+**Date:** December 29, 2025
+**Role:** Travel Ball Organization Owner, Stars National
+
+### Response: STRONG VALIDATION + PHONE CALL SCHEDULED
+
+#### Key Quotes
+
+> "No, what we are doing doesn't work."
+
+> "Very few coaches do what I do. So kids miss opportunities. And very few have real networks."
+
+> "Lots of data opportunities! I've been trying to get my sons to jump in this space for years."
+
+#### Validated Problem Points
+- [x] Current system doesn't work (his words)
+- [x] Most coaches don't help with recruiting guidance
+- [x] Most coaches don't have real networks
+- [x] Kids miss opportunities as a result
+- [x] Data opportunities exist (he's seen them)
+
+#### Signal Strength
+- He's been trying to get his sons to build this for YEARS
+- Wants to call today to share more thoughts
+- "All kinds of thoughts on missing pieces" = deep domain knowledge to tap
+
+#### Next Steps
+- [ ] Phone call with Joe (today after work)
+- [ ] Capture insights from call
+
+---
+
 ## Summary Scorecard
 
 | Respondent | Role | Problem Valid? | Would Use? | Would Help Build? |
 |------------|------|----------------|------------|-------------------|
 | Caitlin Colvin | Advisor/Coach | YES | YES | YES |
-| Joe Walker | Travel Org | Pending | - | - |
+| Joe Walker | Travel Org | YES | YES | Likely (sons?) |
 | Adrian Diaz | Team Coach | Pending | - | - |
 | College Parent | - | Pending | - | - |
 | Current Parent | - | Pending | - | - |
@@ -57,16 +89,22 @@
 1. **Discovery gap is real** - Caitlin has seen it repeatedly with parents from other programs
 2. **Mid-majors are underserved** - They need players but lack digital/physical reach
 3. **Timing decisions matter** - "When to change your school focus" = real pain point
+4. **Current system "doesn't work"** - Joe Walker's exact words
+5. **Most coaches don't help** - Very few do what Joe does; kids miss opportunities
+6. **Network gap** - Very few coaches have real networks to leverage
 
 ### Go-to-Market Signals
-1. **Travel orgs may resist** - Info hoarding is competitive advantage
-2. **Coaches as distribution** - If coaches buy in, families follow
-3. **Mid-major coaches = early adopters?** - They have the most to gain
+1. **Travel orgs may resist** - Info hoarding is competitive advantage (Caitlin)
+2. **BUT org owners see the gap** - Joe runs Stars and says it doesn't work
+3. **Coaches as distribution** - If coaches buy in, families follow
+4. **Mid-major coaches = early adopters?** - They have the most to gain
+5. **Data play is obvious** - Joe's been pushing his sons to build this for years
 
 ### Product Signals
 1. **Curation > AI slop** - People want personalized, not generic
 2. **Honest representation** - Trust/authenticity matters
 3. **Decision support** - Not just info, but guidance on WHEN to act
+4. **"Missing pieces"** - Joe has specific ideas (capture on call)
 
 ---
 
