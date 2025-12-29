@@ -1,6 +1,5 @@
 ---
-// Coach visits dashboard - Tailwind + Flowbite-style
-const isLocal = import.meta.env.DEV;
+// Coach visits dashboard
 ---
 
 <!doctype html>
@@ -29,12 +28,6 @@ const isLocal = import.meta.env.DEV;
     </style>
   </head>
   <body class="bg-gray-900 text-white font-sans min-h-screen">
-    {isLocal && (
-      <div class="bg-gray-800 text-gray-500 text-[10px] text-center py-0.5 font-medium tracking-widest uppercase">
-        Local
-      </div>
-    )}
-
     <!-- Dashboard -->
     <div id="dash" class="max-w-6xl mx-auto px-4 py-8">
       <!-- Header -->
@@ -165,22 +158,7 @@ const isLocal = import.meta.env.DEV;
       </div>
     </div>
 
-    <script is:inline define:vars={{ isLocal }}>
-      // Empty mock data - real data comes from /api/visits in production
-      const MOCK = {
-        summary: {
-          todayPageviews: 0,
-          todayVideoPlays: 0,
-          uniqueCities: 0,
-          totalEngagements: 0,
-          citiesVisited: [],
-          utmSources: {},
-          highValueCounts: {}
-        },
-        highValueEvents: [],
-        todayEvents: []
-      };
-
+    <script is:inline>
       const COLLEGES = ['Tallahassee','Gainesville','Knoxville','Athens','Auburn','Starkville','Columbia','Clemson','Tuscaloosa','Lexington','Louisville','Nashville','Boone','Cullowhee','Charleston','Greenville','Spartanburg','Kennesaw','Jacksonville','Tampa','Orlando','Lynchburg','Blacksburg','Charlottesville','Baton Rouge','College Station','Norman','Stillwater','Fayetteville','Oxford'];
 
       const isCollege = c => c && COLLEGES.some(t => c.toLowerCase().includes(t.toLowerCase()));
@@ -366,8 +344,6 @@ const isLocal = import.meta.env.DEV;
       }
 
       async function load() {
-        if (isLocal) { render(MOCK); return; }
-
         try {
           const r = await fetch('/api/visits?key=APU2028');
           if (!r.ok) return;
