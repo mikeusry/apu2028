@@ -78,8 +78,20 @@
 | Caitlin Colvin | Advisor/Coach | YES | YES | YES |
 | Joe Walker | Travel Org | YES | YES | Likely (sons?) |
 | Adrian Diaz | Team Coach | Pending | - | - |
-| College Parent | - | Pending | - | - |
-| Current Parent | - | Pending | - | - |
+| Matt Cronin | Parent (2029 Mid-Major) | Pending | - | - |
+| Matt Thomas | Parent (2029 Power 4) | Pending | - | - |
+
+### Pending Parent Details
+
+**Matt Cronin** - Daughter: Hannah Cronin (2029)
+- Profile: Mid-major level player
+- Goal: High academic school in New England
+- Why valuable: Represents the "fall through the cracks" segment Caitlin mentioned. Academic fit + regional preference = complex search problem.
+
+**Matt Thomas** - Daughter: Finley Thomas (2029)
+- Profile: Power 4 catcher, projecting SEC/ACC
+- Goal: Elite program placement
+- Why valuable: Tests whether discovery is a problem even for elite prospects, or if they're already well-served by existing networks.
 
 ---
 
