@@ -35,28 +35,8 @@ const isLocal = import.meta.env.DEV;
       </div>
     )}
 
-    <!-- Login -->
-    <div id="login" class={`max-w-sm mx-auto px-4 pt-32 ${isLocal ? 'hidden' : ''}`}>
-      <div class="text-center mb-8">
-        <h1 class="text-xl font-semibold text-white">Coach Visits</h1>
-        <p class="text-gray-500 text-sm mt-2">Enter your access key</p>
-      </div>
-      <input
-        type="password"
-        id="key"
-        placeholder="Access key"
-        class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-      />
-      <button
-        onclick="load()"
-        class="w-full mt-4 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-      >
-        View Dashboard
-      </button>
-    </div>
-
     <!-- Dashboard -->
-    <div id="dash" class={`max-w-6xl mx-auto px-4 py-8 ${isLocal ? '' : 'hidden'}`}>
+    <div id="dash" class="max-w-6xl mx-auto px-4 py-8">
       <!-- Header -->
       <div class="flex items-center justify-between mb-8">
         <div>
@@ -388,37 +368,17 @@ const isLocal = import.meta.env.DEV;
       async function load() {
         if (isLocal) { render(MOCK); return; }
 
-        const key = document.getElementById('key')?.value;
-        if (!key) return;
-
         try {
-          const r = await fetch(`/api/visits?key=${encodeURIComponent(key)}`);
-          if (!r.ok) {
-            if (r.status === 401) alert('Invalid key');
-            return;
-          }
+          const r = await fetch('/api/visits?key=APU2028');
+          if (!r.ok) return;
           const d = await r.json();
-          document.getElementById('login').classList.add('hidden');
-          document.getElementById('dash').classList.remove('hidden');
           render(d);
-          sessionStorage.setItem('k', key);
         } catch (e) {
           console.error(e);
-          alert('Error loading data');
         }
       }
 
-      window.onload = () => {
-        if (isLocal) { load(); return; }
-        const k = sessionStorage.getItem('k');
-        if (k) {
-          document.getElementById('key').value = k;
-          load();
-        }
-        document.getElementById('key')?.addEventListener('keypress', e => {
-          if (e.key === 'Enter') load();
-        });
-      };
+      window.onload = () => { load(); };
     </script>
   </body>
 </html>
