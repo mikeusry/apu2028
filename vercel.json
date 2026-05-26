@@ -2,6 +2,13 @@
   "framework": "astro",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/((?!api/|tracker.js|analytics.js).*)",
+      "destination": "https://starsnatwalker.com/players/ayn-parker-usry/",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",
