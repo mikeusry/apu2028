@@ -1,5 +1,11 @@
 # Ayn Parker Usry - Softball Recruiting Website
 
+> **⚠️ This site now redirects.** As of May 2026, `aynparkerusry.com` 301/308-redirects all traffic to the
+> canonical player page on the team site: **[starsnatwalker.com/players/ayn-parker-usry](https://starsnatwalker.com/players/ayn-parker-usry/)**
+> The redirect lives in [`vercel.json`](./vercel.json). The Astro source below is retained but no longer served
+> (the redirect intercepts every path). Single source of truth for Ayn Parker's recruiting data is now
+> `starsnatwalker.com` (`src/data/players.json` in the `starsnatwalker.com` repo). Edit her info there, not here.
+
 ## Project Overview
 
 A single-page recruiting website for Ayn Parker Usry, a 2028 softball prospect (outfielder) seeking D1 scholarship opportunities. The site serves one purpose: **get college coaches to video as fast as possible** while providing everything they need to evaluate her as a recruit.

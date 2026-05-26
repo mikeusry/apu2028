@@ -2,15 +2,11 @@
   "framework": "astro",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "headers": [
+  "redirects": [
     {
       "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
+      "destination": "https://starsnatwalker.com/players/ayn-parker-usry/",
+      "permanent": true
     }
   ]
 }
