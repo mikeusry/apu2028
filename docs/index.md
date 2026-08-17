@@ -1,11 +1,12 @@
 # APU2028 Documentation
 
-> Ayn Parker Usry - Class of 2028 Softball Recruiting Site
+> Domain currently redirects. Softball lives on the Stars player page. See [domain-strategy.md](domain-strategy.md).
 
 ## Quick Links
 
 | Doc | Purpose |
 |-----|---------|
+| [Domain strategy](domain-strategy.md) | Redirect stays; personal hub later; no second softball bio |
 | [Recruiting Strategy](recruiting/strategy.md) | Target schools, conference tiers, positioning |
 | [Recruiting Wisdom](recruiting/wisdom.md) | Key insights from D1 athletes & coaches |
 | [Coach Visits Dashboard](technical/coach-visits.md) | Tracking system for coach interest |

@@ -1,0 +1,15 @@
+---
+description: Domain split — Stars keeps softball; this domain is not a second bio
+alwaysApply: true
+---
+
+# Domain split
+
+`aynparkerusry.com` 308-redirects to `starsnatwalker.com/players/ayn-parker-usry/`. That page ranks. Do not stand up another softball bio here — it would split the 301 on purpose.
+
+- **Stars player page** stays the softball page. Do not 301 it away. Edit `players.json` there.
+- **This domain** comes back only as a personal hub (flag, track, school, a URL that matches `@AynParkerUsry`). Softball section *links* to Stars. It does not clone `players.json`.
+- Take the domain back only when it does a job the Stars page cannot. Gate: flag film + a real page, not an empty brand wrapper.
+- Not this week. Monday X posts still use the Stars URL. Flag posts do not need a site.
+
+Full decision: [docs/domain-strategy.md](docs/domain-strategy.md)

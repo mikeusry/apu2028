@@ -1,10 +1,12 @@
 # Ayn Parker Usry - Softball Recruiting Website
 
 > **⚠️ This site now redirects.** As of May 2026, `aynparkerusry.com` 301/308-redirects all traffic to the
-> canonical player page on the team site: **[starsnatwalker.com/players/ayn-parker-usry](https://starsnatwalker.com/players/ayn-parker-usry/)**
-> The redirect lives in [`vercel.json`](./vercel.json). The Astro source below is retained but no longer served
-> (the redirect intercepts every path). Single source of truth for Ayn Parker's recruiting data is now
-> `starsnatwalker.com` (`src/data/players.json` in the `starsnatwalker.com` repo). Edit her info there, not here.
+> canonical softball page: **[starsnatwalker.com/players/ayn-parker-usry](https://starsnatwalker.com/players/ayn-parker-usry/)**
+> ([`vercel.json`](./vercel.json)). That page ranks. Do **not** stand up another softball bio here.
+>
+> **Future split** (not this week): Stars stays softball — do not 301 it away. This domain comes back only as a
+> personal hub (flag, track, school) that *links* to Stars and does not clone `players.json`. Gate: flag film + a
+> real page. See [docs/domain-strategy.md](docs/domain-strategy.md). Monday X posts still use the Stars URL.
 
 ## Project Overview
 
