@@ -5,8 +5,8 @@ interface Props {
 }
 
 const {
-  title = "Ayn Parker Usry | 2028 Softball Recruit | Outfield",
-  description = "Ayn Parker Usry - Class of 2028 softball recruit. Outfielder for Stars National Walker. Contact-hitter with plus speed and plus arm. Seeking D1 opportunities."
+  title = "Ayn Parker Usry | Class of 2029 | Women's Flag Football",
+  description = "Ayn Parker Usry - Class of 2029 women's flag football recruit. Highlights, quick facts, schedule and contact."
 } = Astro.props;
 
 const siteUrl = "https://aynparkerusry.com";
@@ -17,14 +17,15 @@ const ogImage = `${siteUrl}/og-image.jpg`;
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Ayn Parker Usry | 2028 Softball Recruit" />
-    <meta property="og:description" content="Class of 2028 outfielder for Stars National Walker. View highlights, stats, and schedule." />
+    <meta property="og:title" content="Ayn Parker Usry | Class of 2029 Flag Football" />
+    <meta property="og:description" content="Class of 2029 women's flag football recruit. View highlights and quick facts." />
     <meta property="og:image" content={ogImage} />
     <meta property="og:url" content={siteUrl} />
     <meta property="og:type" content="website" />
@@ -32,8 +33,8 @@ const ogImage = `${siteUrl}/og-image.jpg`;
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@AynParkerUsry" />
-    <meta name="twitter:title" content="Ayn Parker Usry | 2028 Softball Recruit" />
-    <meta name="twitter:description" content="Class of 2028 outfielder. View highlights and stats." />
+    <meta name="twitter:title" content="Ayn Parker Usry | Class of 2029 Flag Football" />
+    <meta name="twitter:description" content="Class of 2029 women's flag football recruit." />
     <meta name="twitter:image" content={ogImage} />
 
     <!-- Favicon -->
