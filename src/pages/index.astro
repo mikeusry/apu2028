@@ -12,9 +12,6 @@ const speedVideos = byId(['60m-dash-886', 'hurdles-region', '4x100-relay']);
 const strengthVideos = byId(['box-squat-245x5x5', 'pin-squat-330', 'summer-workouts']);
 // Upcoming Clarke Central games, copied from MaxPreps (src/data/flag-schedule.json). Section hides when empty.
 import schedule from '../data/flag-schedule.json';
-const NEXT_GAMES = 3;
-const nextGames = schedule.slice(0, NEXT_GAMES);
-const laterGames = schedule.slice(NEXT_GAMES);
 const MAXPREPS_SCHEDULE = 'https://www.maxpreps.com/ga/athens/clarke-central-gladiators/flag-football/girls/fall/26-27/schedule/';
 const MAXPREPS_TEAM = 'https://www.maxpreps.com/ga/athens/clarke-central-gladiators/flag-football/girls/fall/';
 
@@ -281,39 +278,24 @@ const supportPhotos = [
       </div>
     </section>
 
-    <!-- 8. Schedule: next 3 games, rest behind an expander -->
+    <!-- 8. Schedule: full list -->
     {schedule.length > 0 && (
-    <section id="schedule" class="section">
-      <div class="max-w-3xl mx-auto px-4">
+    <section id="schedule" class="section bg-ink-2">
+      <div class="max-w-6xl mx-auto px-4">
         <p class="eyebrow">Schedule</p>
         <h2 class="section-title">Come see her play</h2>
         <p class="mt-2 text-white/80">Clarke Central varsity girls flag football &middot; Ayn Parker wears <strong class="text-gold">#7</strong></p>
-        <div class="mt-5 sched">
-          {nextGames.map((g) => (
-            <div class="sched-row">
+        <div class="mt-6 card divide-y divide-white/10">
+          {schedule.map((g) => (
+            <div class="sched-row p-4 grid grid-cols-[6.5rem_1fr] sm:grid-cols-[8rem_6rem_1fr] gap-x-4 gap-y-0.5 items-baseline">
               <span class="font-bold text-white">{g.date}</span>
-              <span class="text-white/75 text-sm">{g.time}</span>
+              <span class="text-white/75 text-sm sm:order-none">{g.time}</span>
               <span class="col-span-2 sm:col-span-1 text-white">
                 <span class="text-white/75">{g.ha === '@' ? 'at' : 'vs'}</span> <span class="font-semibold">{g.opponent}</span>{g.region && <span class="badge-red ml-2">Region</span>}
                 {g.note && <span class="block text-xs text-white/75 mt-0.5">{g.note}</span>}
               </span>
             </div>
           ))}
-          {laterGames.length > 0 && (
-            <details class="sched-more">
-              <summary class="sched-toggle"><span class="more">Show full schedule ({schedule.length} games)</span><span class="less">Show fewer</span></summary>
-              {laterGames.map((g) => (
-                <div class="sched-row">
-                  <span class="font-bold text-white">{g.date}</span>
-                  <span class="text-white/75 text-sm">{g.time}</span>
-                  <span class="col-span-2 sm:col-span-1 text-white">
-                    <span class="text-white/75">{g.ha === '@' ? 'at' : 'vs'}</span> <span class="font-semibold">{g.opponent}</span>{g.region && <span class="badge-red ml-2">Region</span>}
-                    {g.note && <span class="block text-xs text-white/75 mt-0.5">{g.note}</span>}
-                  </span>
-                </div>
-              ))}
-            </details>
-          )}
         </div>
         <p class="mt-3 text-xs text-white/75"><a class="link-gold" href={MAXPREPS_SCHEDULE} target="_blank" rel="noopener">Schedule via MaxPreps</a></p>
       </div>
@@ -446,20 +428,11 @@ const supportPhotos = [
   .info-block dt { font-size:.72rem; text-transform:uppercase; letter-spacing:.12em; font-weight:700; color:rgba(255,255,255,.75); }
   .info-block dd { font-weight:600; color:#fff; }
   .badge-red { display:inline-block; font-size:10px; text-transform:uppercase; letter-spacing:.1em; font-weight:800; background:var(--red); color:#fff; padding:.1rem .4rem; border-radius:.3rem; vertical-align:middle; }
-  .sched { border-top:1px solid rgba(255,255,255,.15); }
-  .sched-row { display:grid; grid-template-columns:6.5rem 1fr; column-gap:1rem; row-gap:.1rem; align-items:baseline; padding:.7rem .25rem; border-bottom:1px solid rgba(255,255,255,.15); transition:background .15s; }
-  @media (min-width: 640px) { .sched-row { grid-template-columns:7.5rem 5.5rem 1fr; } }
-  .sched-row:hover { background:rgba(238,164,59,.07); }
-  .sched-more > summary { list-style:none; cursor:pointer; }
-  .sched-more > summary::-webkit-details-marker { display:none; }
-  .sched-toggle { padding:.7rem .25rem; font-size:.875rem; font-weight:700; color:var(--gold); }
-  .sched-toggle::after { content:' \25BE'; }
-  .sched-more .less { display:none; } .sched-more[open] .less { display:inline; } .sched-more[open] .more { display:none; }
-  .sched-more[open] > .sched-toggle::after { content:' \25B4'; }
   /* Simpler form: no card, quiet inputs */
   .field { display:flex; flex-direction:column; gap:.3rem; font-size:.8rem; font-weight:700; color:rgba(255,255,255,.85); }
   .field em { font-weight:500; font-style:normal; color:rgba(255,255,255,.7); }
   .field input, .field select, .field textarea { min-width:0; width:100%; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.2); border-radius:.45rem; padding:.6rem .75rem; color:#fff; font-size:1rem; font-weight:500; }
   .field input:focus, .field select:focus, .field textarea:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(238,164,59,.25); }
   .hp { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
+  .sched-row { transition:background .15s; } .sched-row:hover { background:rgba(238,164,59,.07); }
 </style>
