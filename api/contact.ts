@@ -50,7 +50,8 @@ async function supabase(path: string, method: string, body?: unknown, prefer = '
   if (!url || !key) return null;
   const r = await fetch(`${url.replace(/\/$/, '')}/rest/v1/${path}`, {
     method,
-    headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', Prefer: prefer },
+    // New-style keys (sb_secret_...) go in apikey only; legacy JWT service-role keys also need Authorization.
+    headers: { apikey: key, ...(key.startsWith('eyJ') ? { Authorization: `Bearer ${key}` } : {}), 'Content-Type': 'application/json', Prefer: prefer },
     body: body ? JSON.stringify(body) : undefined,
   });
   if (!r.ok) throw new Error(`supabase ${method} ${r.status}`);
