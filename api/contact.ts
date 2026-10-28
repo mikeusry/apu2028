@@ -13,7 +13,7 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import sgMail from '@sendgrid/mail';
-import { kv } from '@vercel/kv';
+import { db, countRows } from './_db.js';
 import { createHash } from 'node:crypto';
 
 const ROLES = ['College coach', 'Club/HS coach', 'Recruiter', 'Other'] as const;
@@ -76,12 +76,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
   const ipHash = createHash('sha256').update(`${process.env.CONTACT_IP_SALT || 'apu-site-contact'}:${ip}`).digest('hex').slice(0, 32);
 
-  // Rate limit (fail open if KV is unavailable)
+  // Rate limit via site_events in Supabase. Fails open on any error or after ~1.5s.
   try {
-    const key = `contact:rl:${ipHash}`;
-    const n = await kv.incr(key);
-    if (n === 1) await kv.expire(key, RATE_WINDOW_S);
-    if (n > RATE_MAX) return res.status(429).json({ ok: false, error: 'Too many messages. Please try again later.' });
+    const since = new Date(Date.now() - RATE_WINDOW_S * 1000).toISOString();
+    const n = await countRows('site_events', `type=eq.contact_attempt&ip_hash=eq.${ipHash}&created_at=gte.${encodeURIComponent(since)}`, 1500);
+    if (n >= RATE_MAX) return res.status(429).json({ ok: false, error: 'Too many messages. Please try again later.' });
+    await db('site_events', 'POST', { type: 'contact_attempt', ip_hash: ipHash, page: '/api/contact' }, 'return=minimal', 1500);
   } catch (e) {
     console.error('[contact] rate limit unavailable', (e as Error).message);
   }

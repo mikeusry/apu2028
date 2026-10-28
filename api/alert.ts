@@ -7,7 +7,7 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import sgMail from '@sendgrid/mail';
-import { kv } from '@vercel/kv';
+import { db, countRows } from './_db.js';
 
 interface UtmParams {
   utm_source?: string;
@@ -65,14 +65,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const today = new Date().toISOString().split('T')[0];
     const alertKey = `alert:${today}:${decodedCity}:${decodedRegion}`;
 
-    const alreadyAlerted = await kv.get(alertKey);
+    const since = `${today}T00:00:00Z`;
+    const alreadyAlerted = await countRows('site_events', `type=eq.visit_alert&page=eq.${encodeURIComponent(alertKey)}&created_at=gte.${since}`, 1500);
     if (alreadyAlerted) {
       console.log(`[APU Alert] Already alerted for ${decodedCity}, ${decodedRegion} today`);
       return res.status(200).json({ ok: true, alerted: false, reason: 'already_alerted_today' });
     }
 
     // Mark as alerted (expires at midnight)
-    await kv.set(alertKey, true, { ex: 60 * 60 * 24 });
+    await db('site_events', 'POST', { type: 'visit_alert', page: alertKey, city: decodedCity, region: decodedRegion, country }, 'return=minimal', 1500);
 
     // Build email
     const apiKey = process.env.SENDGRID_API_KEY;

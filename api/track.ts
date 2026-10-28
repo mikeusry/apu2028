@@ -2,7 +2,7 @@
  * Ayn Parker Usry - Recruitment Tracker
  *
  * Tracks pageviews and video plays with geolocation.
- * Stores events in Vercel KV (Redis) for easy querying.
+ * Stores events in Supabase (public.site_events, service role only).
  *
  * Vercel provides geo data automatically via headers:
  * - x-vercel-ip-city
@@ -11,7 +11,8 @@
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { kv } from '@vercel/kv';
+import { createHash } from 'node:crypto';
+import { db } from './_db.js';
 
 // UTM parameters for campaign attribution
 interface UtmParams {
@@ -125,59 +126,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       section: body.section || undefined
     };
 
-    // Store in Vercel KV
-    // Key format: events:{date}:{id}
-    const dateKey = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    const eventKey = `events:${dateKey}:${event.id}`;
-
-    await kv.set(eventKey, event, { ex: 60 * 60 * 24 * 90 }); // Keep for 90 days
-
-    // Also add to a sorted set for easy date queries
-    await kv.zadd(`events:${dateKey}`, {
-      score: Date.now(),
-      member: event.id
-    });
-
-    // Track video plays separately for quick lookup
-    if (event.type === 'video_play' && event.city) {
-      await kv.lpush('video_plays', JSON.stringify({
-        city: event.city,
-        region: event.region,
-        timestamp: event.timestamp,
-        device: event.device,
-        utm: event.utm
-      }));
-      // Trim to last 500 video plays
-      await kv.ltrim('video_plays', 0, 499);
+    // Store in Supabase (public.site_events). Short timeout so tracking never hangs the page.
+    const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+    const ipHash = ip ? createHash('sha256').update(`apu-site-track:${ip}`).digest('hex').slice(0, 32) : null;
+    const meta: Record<string, unknown> = {};
+    for (const k of ['videoProgress', 'format', 'tournament', 'emailType', 'formType', 'section'] as const) {
+      if (event[k] !== undefined) meta[k] = event[k];
     }
-
-    // Track high-value engagement events separately
-    const highValueEvents = ['resume_download', 'coach_email_click', 'contact_form_submit'];
-    if (highValueEvents.includes(event.type) && event.city) {
-      await kv.lpush('high_value_events', JSON.stringify({
-        type: event.type,
-        city: event.city,
-        region: event.region,
-        timestamp: event.timestamp,
-        device: event.device,
-        utm: event.utm,
-        metadata: {
-          format: event.format,
-          emailType: event.emailType,
-          formType: event.formType
-        }
-      }));
-      // Trim to last 200 high-value events
-      await kv.ltrim('high_value_events', 0, 199);
-    }
-
-    // Track UTM sources separately for analytics
-    if (event.utm?.utm_source) {
-      const utmKey = `utm:${dateKey}:${event.utm.utm_source}`;
-      await kv.incr(utmKey);
-      // Set expiry on first increment
-      await kv.expire(utmKey, 60 * 60 * 24 * 90); // 90 days
-    }
+    await db('site_events', 'POST', {
+      type: String(event.type).slice(0, 40),
+      page: String(event.page).slice(0, 500),
+      referrer: event.referrer ? String(event.referrer).slice(0, 500) : null,
+      city: event.city, region: event.region, country: event.country,
+      device: event.device,
+      user_agent: userAgent.slice(0, 500),
+      video_id: event.videoId ? String(event.videoId).slice(0, 100) : null,
+      utm: event.utm || null,
+      meta: Object.keys(meta).length ? meta : null,
+      ip_hash: ipHash,
+    }, 'return=minimal', 2500);
 
     // Build log message
     const utmInfo = event.utm?.utm_source ? ` [utm_source=${event.utm.utm_source}]` : '';

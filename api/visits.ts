@@ -6,7 +6,7 @@
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { kv } from '@vercel/kv';
+import { db } from './_db.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Simple key protection - check query param or header
@@ -18,53 +18,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    // Get recent video plays (most interesting data)
-    const videoPlays = await kv.lrange('video_plays', 0, 49);
-    const parsedVideoPlays = videoPlays.map((v: string | object) => {
-      if (typeof v === 'string') {
-        try {
-          return JSON.parse(v);
-        } catch {
-          return v;
-        }
-      }
-      return v;
+    // Events live in Supabase (public.site_events). Map rows back to the old event shape.
+    const toEvent = (r: any) => ({
+      id: r.id, type: r.type, timestamp: r.created_at, city: r.city, region: r.region, country: r.country,
+      page: r.page, referrer: r.referrer, videoId: r.video_id || undefined, device: r.device, utm: r.utm || undefined,
+      ...(r.meta || {}),
     });
+    const sel = 'select=id,created_at,type,page,referrer,city,region,country,device,video_id,utm,meta';
+    const notInternal = 'type=not.in.(contact_attempt,visit_alert)';
+    const videoPlays = ((await db(`site_events?${sel}&type=eq.video_play&city=not.is.null&order=created_at.desc&limit=50`)) as any[]).map(toEvent);
+    const parsedVideoPlays = videoPlays;
+    const parsedHighValueEvents = ((await db(`site_events?${sel}&type=in.(resume_download,coach_email_click,contact_form_submit)&order=created_at.desc&limit=50`)) as any[])
+      .map(toEvent).map((e: any) => ({ ...e, metadata: { format: e.format, emailType: e.emailType, formType: e.formType } }));
 
-    // Get high-value events (resume downloads, email clicks, form submissions)
-    const highValueEvents = await kv.lrange('high_value_events', 0, 49);
-    const parsedHighValueEvents = highValueEvents.map((v: string | object) => {
-      if (typeof v === 'string') {
-        try {
-          return JSON.parse(v);
-        } catch {
-          return v;
-        }
-      }
-      return v;
-    });
-
-    // Get today's events
     const today = new Date().toISOString().split('T')[0];
-    const todayEventIds = await kv.zrange(`events:${today}`, 0, -1);
-
-    // Get yesterday's events too
     const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-    const yesterdayEventIds = await kv.zrange(`events:${yesterday}`, 0, -1);
-
-    // Fetch full event data for today
-    const todayEvents = [];
-    for (const id of todayEventIds.slice(-50)) { // Last 50
-      const event = await kv.get(`events:${today}:${id}`);
-      if (event) todayEvents.push(event);
-    }
-
-    // Fetch full event data for yesterday
-    const yesterdayEvents = [];
-    for (const id of yesterdayEventIds.slice(-50)) {
-      const event = await kv.get(`events:${yesterday}:${id}`);
-      if (event) yesterdayEvents.push(event);
-    }
+    // Oldest-first within each day, last 50, to match the previous behavior
+    const dayEvents = async (d: string, next: string) =>
+      ((await db(`site_events?${sel}&${notInternal}&created_at=gte.${d}T00:00:00Z&created_at=lt.${next}T00:00:00Z&order=created_at.desc&limit=50`)) as any[])
+        .map(toEvent).reverse();
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+    const todayEvents = await dayEvents(today, tomorrow);
+    const yesterdayEvents = await dayEvents(yesterday, today);
 
     // Summary stats
     const allEvents = [...todayEvents, ...yesterdayEvents];

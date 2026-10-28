@@ -10,14 +10,13 @@ const {
 } = Astro.props;
 
 const siteUrl = "https://aynparkerusry.com";
-const ogImage = `${siteUrl}/og-image.jpg`;
+const ogImage = `${siteUrl}/og-ayn-parker-usry.jpg`;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="robots" content="noindex, nofollow" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>{title}</title>
@@ -27,6 +26,9 @@ const ogImage = `${siteUrl}/og-image.jpg`;
     <meta property="og:title" content="Aynsley Parker Usry | Class of 2029 Flag Football" />
     <meta property="og:description" content="Class of 2029 women's flag football recruit (WR / QB / Safety). View highlights and quick facts." />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Ayn Parker Usry, #7, Clarke Central flag football" />
     <meta property="og:url" content={siteUrl} />
     <meta property="og:type" content="website" />
 
@@ -38,7 +40,9 @@ const ogImage = `${siteUrl}/og-image.jpg`;
     <meta name="twitter:image" content={ogImage} />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
