@@ -1,6 +1,6 @@
 ---
 // One Mux thumbnail button. Clicking opens the shared lightbox player in index.astro (it binds every .video-thumb).
-interface Video { id: string; playbackId: string; title: string; caption: string; thumbTime?: number; vertical?: boolean }
+interface Video { id: string; playbackId: string; title: string; caption: string; thumbTime?: number; vertical?: boolean; duration?: string; bright?: number }
 const { v, size = 'sm', label } = Astro.props as { v: Video; size?: 'lg' | 'md' | 'sm'; label?: string };
 const w = size === 'sm' ? 640 : 1280;
 ---
@@ -11,7 +11,7 @@ const w = size === 'sm' ? 640 : 1280;
   data-video-id={v.id}
   data-title={v.caption}
   data-vertical={v.vertical ? '1' : undefined}
-  aria-label={`Play: ${v.caption}`}
+  aria-label={`Play: ${v.caption}${v.duration ? ` (${v.duration})` : ''}`}
 >
   <div class={`relative ${size === 'lg' ? 'aspect-video lg:aspect-[21/9]' : 'aspect-video'} rounded-xl overflow-hidden ring-1 ring-white/10 group-hover:ring-2 group-hover:ring-gold transition-all bg-black`}>
     {v.vertical && (
@@ -24,6 +24,7 @@ const w = size === 'sm' ? 640 : 1280;
       width={v.vertical ? 360 : w}
       height={v.vertical ? 640 : Math.round((w * 9) / 16)}
       class={`relative w-full h-full ${v.vertical ? 'object-contain' : 'object-cover'} group-hover:scale-[1.03] transition-transform duration-300`}
+      style={v.bright ? `filter:brightness(${v.bright}) contrast(1.03)` : undefined}
     />
     {size === 'lg' && <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" aria-hidden="true"></div>}
     <div class={`absolute inset-0 ${size === 'lg' ? '' : 'bg-black/25 group-hover:bg-black/40'} transition-colors flex items-center justify-center`}>
@@ -31,10 +32,13 @@ const w = size === 'sm' ? 640 : 1280;
         <svg class={`${size === 'lg' ? 'w-8 h-8 sm:w-10 sm:h-10' : 'w-6 h-6'} ml-1`} style="color:#090909" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       </div>
     </div>
+    {v.duration && (
+      <span class="absolute right-2 bottom-2 bg-black/75 text-white text-[11px] font-bold tabular-nums px-1.5 py-0.5 rounded">{v.duration}</span>
+    )}
     {label && (
       <span class="absolute left-3 top-3 sm:left-4 sm:top-4 bg-gold text-ink text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.14em] px-2.5 py-1 rounded-md">{label}</span>
     )}
   </div>
   <p class={`mt-2 font-bold leading-snug text-white group-hover:text-gold transition-colors ${size === 'lg' ? 'text-base sm:text-lg' : size === 'md' ? 'text-sm sm:text-base' : 'text-xs sm:text-sm'}`}>{v.caption}</p>
-  {size !== 'sm' && <p class="text-xs sm:text-sm text-white/75 mt-0.5">{v.title}</p>}
+  {size === 'lg' && <p class="text-xs sm:text-sm text-white/85 mt-0.5">{v.title}</p>}
 </button>

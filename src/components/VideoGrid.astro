@@ -2,7 +2,7 @@
 // Lead clip + smaller grid. variant 'feature': lead full width, rest in a grid below (game film).
 // variant 'side': lead takes 2/3 on desktop with the rest stacked beside it; on mobile lead then a 2-up grid (track, strength).
 import VideoThumb from './VideoThumb.astro';
-interface Video { id: string; playbackId: string; title: string; caption: string; thumbTime?: number; vertical?: boolean }
+interface Video { id: string; playbackId: string; title: string; caption: string; thumbTime?: number; vertical?: boolean; duration?: string; bright?: number }
 const { videos, label, variant = 'side' } = Astro.props as { videos: Video[]; label?: string; variant?: 'feature' | 'side' };
 const [lead, ...rest] = videos;
 ---
