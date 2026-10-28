@@ -6,7 +6,7 @@ import VideoGrid from '../components/VideoGrid.astro';
 // All site videos are on Mux (public playback). One line per video in src/data/site-videos.json; order = display order.
 import videos from '../data/site-videos.json';
 const byId = (ids: string[]) => ids.map((id) => videos.find((v) => v.id === id)).filter(Boolean) as typeof videos;
-// First game reel = featured "Start here" clip (Elbert County); the rest go in the smaller grid.
+// First game reel = featured "Start here" clip (Loganville); the rest go in the smaller grid.
 const gameVideos = videos.filter((v) => v.category === 'game');
 const speedVideos = byId(['60m-dash-886', 'hurdles-region', '4x100-relay']);
 const strengthVideos = byId(['box-squat-245x5x5', 'pin-squat-330', 'summer-workouts']);
@@ -99,7 +99,7 @@ const supportPhotos = [
         var box = document.getElementById('video-lightbox');
         var slot = document.getElementById('lightbox-slot');
         var label = document.getElementById('lightbox-title');
-        var player = null, loading = null;
+        var player = null, loading = null, ytFrame = null;
         function loadMux() {
           if (loading) return loading;
           loading = new Promise(function (res, rej) {
@@ -121,6 +121,22 @@ const supportPhotos = [
           slot.style.margin = vert ? '0 auto' : '';
           box.classList.remove('hidden'); box.classList.add('flex');
           document.body.style.overflow = 'hidden';
+          var yt = btn.getAttribute('data-youtube-id');
+          if (ytFrame) { ytFrame.remove(); ytFrame = null; }
+          if (yt) {
+            if (player && player.pause) player.pause();
+            if (player) player.style.display = 'none';
+            ytFrame = document.createElement('iframe');
+            ytFrame.src = 'https://www.youtube-nocookie.com/embed/' + yt + '?autoplay=1&rel=0&playsinline=1';
+            ytFrame.title = title;
+            ytFrame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+            ytFrame.allowFullscreen = true;
+            ytFrame.style.cssText = 'width:100%;height:100%;display:block;border:0';
+            slot.appendChild(ytFrame);
+            if (window.apuTrack && window.apuTrack.videoPlay) window.apuTrack.videoPlay(vid);
+            return;
+          }
+          if (player) player.style.display = 'block';
           loadMux().then(function () {
             if (!player) {
               player = document.createElement('mux-player');
@@ -142,6 +158,7 @@ const supportPhotos = [
         }
         function close() {
           if (player && player.pause) player.pause();
+          if (ytFrame) { ytFrame.remove(); ytFrame = null; }
           box.classList.add('hidden'); box.classList.remove('flex');
           document.body.style.overflow = '';
         }
