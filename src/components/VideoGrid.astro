@@ -8,14 +8,14 @@ const { videos } = Astro.props as { videos: Video[] };
   {videos.map((v) => (
     <button
       type="button"
-      class="video-thumb group text-left self-start w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-xl"
+      class="video-thumb group text-left self-start w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-xl"
       data-playback-id={v.playbackId}
       data-video-id={v.id}
       data-title={v.caption}
       data-vertical={v.vertical ? '1' : undefined}
       aria-label={`Play: ${v.caption}`}
     >
-      <div class="relative aspect-video rounded-xl overflow-hidden shadow-md group-hover:shadow-xl transition-shadow bg-black">
+      <div class="relative aspect-video rounded-xl overflow-hidden ring-1 ring-white/10 group-hover:ring-2 group-hover:ring-gold transition-all bg-black">
         {v.vertical && (
           <img src={`https://image.mux.com/${v.playbackId}/thumbnail.jpg?width=320&time=${v.thumbTime ?? 5}`} alt="" aria-hidden="true" loading="lazy" class="absolute inset-0 w-full h-full object-cover blur-md opacity-75 scale-110" />
         )}
@@ -28,13 +28,13 @@ const { videos } = Astro.props as { videos: Video[] };
           class={`relative w-full h-full ${v.vertical ? 'object-contain' : 'object-cover'} group-hover:scale-105 transition-transform duration-300`}
         />
         <div class="absolute inset-0 bg-black/25 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-          <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <svg class="w-6 h-6 sm:w-7 sm:h-7 ml-1" style="color:#062a4b" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-gold flex items-center justify-center group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6 sm:w-7 sm:h-7 ml-1" style="color:#090909" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
           </div>
         </div>
       </div>
-      <p class="mt-2 font-bold text-xs sm:text-sm leading-snug text-gray-900">{v.caption}</p>
-      <p class="text-xs text-gray-500 mt-0.5">{v.title}</p>
+      <p class="mt-2 font-bold text-xs sm:text-sm leading-snug text-white group-hover:text-gold transition-colors">{v.caption}</p>
+      <p class="text-xs text-white/55 mt-0.5">{v.title}</p>
     </button>
   ))}
 </div>

@@ -5,61 +5,72 @@ import '../styles/global.css';
 import VideoGrid from '../components/VideoGrid.astro';
 // All site videos are on Mux (public playback). One line per video in src/data/site-videos.json; order = display order.
 import videos from '../data/site-videos.json';
+const byId = (ids: string[]) => ids.map((id) => videos.find((v) => v.id === id)).filter(Boolean) as typeof videos;
 const gameVideos = videos.filter((v) => v.category === 'game');
-const trainingVideos = videos.filter((v) => v.category === 'training');
+const speedVideos = byId(['60m-dash-886', 'hurdles-region', '4x100-relay']);
+const strengthVideos = byId(['box-squat-245x5x5', 'pin-squat-330', 'summer-workouts']);
 // Upcoming Clarke Central games, copied from MaxPreps (src/data/flag-schedule.json). Section hides when empty.
 import schedule from '../data/flag-schedule.json';
 const MAXPREPS_SCHEDULE = 'https://www.maxpreps.com/ga/athens/clarke-central-gladiators/flag-football/girls/fall/26-27/schedule/';
+const MAXPREPS_TEAM = 'https://www.maxpreps.com/ga/athens/clarke-central-gladiators/flag-football/girls/fall/';
+// Album photos (Photos > "AP Flag Football"); resized, EXIF/GPS stripped. Crop/resize only.
+const gallery = [
+  { src: '/photos/ayn-qb-throw-pink.jpg', w: 900, h: 1281, alt: 'Ayn #7 setting to throw in a pink Clarke Central jersey', cap: 'At QB · Oct 17, 2026', pos: '50% 35%' },
+  { src: '/photos/ayn-7-ball-carry-night.jpg', w: 1200, h: 854, alt: 'Ayn #7 carrying the ball at night', cap: 'Ball in hand · Oct 17, 2026', pos: '50% 40%' },
+  { src: '/photos/ayn-7-route-white.jpg', w: 842, h: 1600, alt: 'Ayn #7 in a white Clarke Central jersey on the field', cap: 'Clarke Central #7 · Sep 23, 2026', pos: '30% 55%' },
+  { src: '/photos/ayn-7-white-sideline.jpg', w: 1200, h: 800, alt: 'Ayn #7 in white, seen from behind', cap: 'Clarke Central #7 · Sep 23, 2026', pos: '55% 40%' },
+];
 ---
 
 <Layout>
   <div class="preview-banner">Preview draft. Not launched.</div>
 
-  <header class="sticky top-0 z-30 bg-navy/95 backdrop-blur text-white">
-    <nav class="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
-      <a href="#top" class="font-extrabold tracking-tight">APU <span class="text-accent font-semibold">2029</span></a>
-      <div class="hidden sm:flex gap-5 text-sm font-medium">
-        <a href="#highlights" class="hover:text-accent">Highlights</a>
-        <a href="#facts" class="hover:text-accent">Facts</a>
-        {schedule.length > 0 && <a href="#schedule" class="hover:text-accent">Schedule</a>}
-        <a href="#academics" class="hover:text-accent">Academics</a>
-        <a href="#contact" class="hover:text-accent">Contact</a>
+  <header class="sticky top-0 z-30 bg-ink/90 backdrop-blur border-b border-white/10 text-white">
+    <nav class="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
+      <a href="#top" class="font-extrabold tracking-tight">APU <span class="text-gold">2029</span></a>
+      <div class="hidden md:flex gap-5 text-sm font-medium text-white/80">
+        <a href="#film" class="nav-link">Film</a>
+        <a href="#facts" class="nav-link">Facts</a>
+        <a href="#speed" class="nav-link">Speed</a>
+        <a href="#strength" class="nav-link">Strength</a>
+        <a href="#two-sport" class="nav-link">Softball</a>
+        <a href="#academics" class="nav-link">Academics</a>
+        {schedule.length > 0 && <a href="#schedule" class="nav-link">Schedule</a>}
+        <a href="#contact" class="nav-link">Contact</a>
       </div>
-      <a href="#contact" class="sm:hidden text-sm font-semibold bg-white text-navy px-3 py-1.5 rounded-md">Contact</a>
+      <a href="#contact" class="md:hidden text-sm font-bold bg-gold text-ink px-3 py-1.5 rounded-md">Contact</a>
     </nav>
   </header>
 
   <main id="top">
-    <!-- Hero -->
-    <section class="hero text-white">
-      <div class="max-w-5xl mx-auto px-4 py-16 md:py-24">
-        <p class="uppercase tracking-[0.2em] text-xs md:text-sm text-accent font-semibold">Women's Flag Football Recruit</p>
-        <h1 class="mt-3 text-4xl md:text-6xl font-extrabold leading-tight">Ayn Parker Usry</h1>
-        <div class="mt-5 flex flex-wrap gap-2 text-sm md:text-base">
-          <span class="chip">Class of 2029</span>
-          <span class="chip">WR / QB / Safety</span>
-          <span class="chip">#7</span>
-          <span class="chip">5'7"</span>
-        </div>
-        <p class="mt-5 text-white/80 max-w-xl"><a href="https://www.maxpreps.com/ga/athens/clarke-central-gladiators/flag-football/girls/fall/" target="_blank" rel="noopener" class="underline decoration-1 underline-offset-2 hover:opacity-80">Clarke Central flag football</a> &middot; Athens, GA &middot; Multi-sport varsity athlete</p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <a href="#highlights" class="btn-light">Watch highlights</a>
-          <a href="#contact" class="btn-outline">Contact</a>
+    <!-- 1. Hero: running photo, dark fade so text stays readable; Ayn sits ~62% across the frame -->
+    <section class="hero relative overflow-hidden text-white">
+      <img src="/photos/hero-ayn-run-7.jpg" alt="Ayn Parker Usry, #7, running with the ball" width="1591" height="1045" fetchpriority="high" class="hero-img absolute inset-0 w-full h-full object-cover" />
+      <div class="hero-fade absolute inset-0" aria-hidden="true"></div>
+      <div class="relative max-w-6xl mx-auto px-4 hero-inner">
+        <div class="max-w-md">
+          <p class="uppercase tracking-[0.2em] text-xs md:text-sm text-gold font-bold">Women's flag football</p>
+          <h1 class="mt-3 text-4xl md:text-6xl font-extrabold leading-[1.05]">Ayn Parker Usry</h1>
+          <div class="mt-5 flex flex-wrap gap-2 text-sm md:text-base">
+            <span class="chip chip-gold">#7</span>
+            <span class="chip">Class of 2029</span>
+            <span class="chip">WR / QB / Safety</span>
+          </div>
+          <p class="mt-5 text-white/80"><a href={MAXPREPS_TEAM} target="_blank" rel="noopener" class="link-gold">Clarke Central</a> &middot; Athens, GA</p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a href="#film" class="btn-gold">Watch game film</a>
+            <a href="#contact" class="btn-outline">Contact</a>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Videos: compact Mux thumbnail grids + one lightbox player.
-         Data: src/data/site-videos.json, one line per video; category "game" or "training"; order = display order. -->
-    <section id="highlights" class="section">
-      <div class="max-w-5xl mx-auto px-4">
-        <h2 class="section-title">Game highlights</h2>
+    <!-- 2. Game film -->
+    <section id="film" class="section">
+      <div class="max-w-6xl mx-auto px-4">
+        <p class="eyebrow">Game film</p>
+        <h2 class="section-title">Clarke Central highlights</h2>
         <VideoGrid videos={gameVideos} />
-        <h2 id="training" class="section-title mt-12 scroll-mt-20">Training &amp; speed</h2>
-        <VideoGrid videos={trainingVideos} />
-        <p class="mt-8 text-sm text-gray-600">
-          <a class="font-semibold underline hover:text-sky-700" href="https://www.youtube.com/@APU-2029" target="_blank" rel="noopener">More videos on YouTube &rarr;</a>
-        </p>
       </div>
     </section>
 
@@ -106,7 +117,7 @@ const MAXPREPS_SCHEDULE = 'https://www.maxpreps.com/ga/athens/clarke-central-gla
             if (!player) {
               player = document.createElement('mux-player');
               player.setAttribute('stream-type', 'on-demand');
-              player.setAttribute('accent-color', '#062a4b');
+              player.setAttribute('accent-color', '#EEA43B');
               player.setAttribute('autoplay', 'any');
               player.style.cssText = 'width:100%;height:100%;display:block';
               slot.appendChild(player);
@@ -135,98 +146,190 @@ const MAXPREPS_SCHEDULE = 'https://www.maxpreps.com/ga/athens/clarke-central-gla
       })();
     </script>
 
-    <!-- Quick facts -->
-    <section id="facts" class="section bg-gray-50">
-      <div class="max-w-5xl mx-auto px-4">
-        <h2 class="section-title">Quick facts</h2>
-        <div class="mt-6 card grid grid-cols-2 md:grid-cols-4 gap-px bg-gray-200 overflow-hidden">
-          <div class="fact"><span class="label">Height</span><span class="value">5'7"</span></div>
-          <div class="fact"><span class="label">Weight</span><span class="value">135 lbs</span></div>
-          <div class="fact"><span class="label">GPA</span><span class="value">3.74</span></div>
-          <div class="fact"><span class="label">Intended major</span><span class="value">Business (Finance)</span></div>
-          <div class="fact"><span class="label">Hometown</span><span class="value">Athens, GA</span></div>
-          <div class="fact"><span class="label">High school</span><span class="value"><a href="https://www.maxpreps.com/ga/athens/clarke-central-gladiators/flag-football/girls/fall/" target="_blank" rel="noopener" class="underline decoration-1 underline-offset-2 hover:opacity-80">Clarke Central</a></span></div>
-          <div class="fact col-span-2"><span class="label">NCAA ID</span><span class="value"><a href="https://web3.ncaa.org/ecwr3/" target="_blank" rel="noopener" class="underline decoration-1 underline-offset-2 hover:opacity-80">2509718485</a></span></div>
-          <div class="fact"><span class="label">Class</span><span class="value">2029</span></div>
-          <div class="fact"><span class="label">Flag position</span><span class="value">WR / QB / Safety</span></div>
-          <div class="fact"><span class="label">Jersey</span><span class="value">#7</span></div>
-          <div class="fact"><span class="label">Level</span><span class="value">Varsity</span></div>
-          <div class="fact col-span-2 md:col-span-4"><span class="label">Softball club</span><span class="value">Top Gun Walker</span></div>
-        </div>
-        <div class="mt-6 card p-5 md:p-6">
-          <h3 class="font-bold">Athletic background</h3>
-          <div class="mt-3 grid md:grid-cols-2 gap-6 text-gray-700">
-            <div>
-              <p class="label">Track &amp; field</p>
-              <ul class="mt-2 space-y-1.5 list-disc pl-5">
-                <li>State track finalist, triple jump</li>
-                <li>60m: 8.86 laser-timed (5A Georgia meet)</li>
-                <li>4x100m relay leg, curve runner</li>
-              </ul>
-            </div>
-            <div>
-              <p class="label">Softball (outfield, bats R / throws R)</p>
-              <ul class="mt-2 space-y-1.5 list-disc pl-5">
-                <li>2026 Alliance Fastpitch 16U Tier III National Runner-Up</li>
-                <li>2025 Alliance Atlantic Region Champions</li>
-                <li>Exit velo 73 mph; outfield velo 65 mph</li>
-              </ul>
-            </div>
+    <!-- 3. Photo break: portrait beside Quick facts -->
+    <section id="facts" class="section bg-ink-2">
+      <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-8 md:gap-12 items-center">
+        <figure class="photo-frame aspect-[4/5] md:aspect-[3/4]">
+          <img src="/photos/ayn-7-portrait-black.jpg" alt="Ayn #7 in a black Clarke Central jersey" width="900" height="1831" loading="lazy" class="w-full h-full object-cover" style="object-position:50% 22%" />
+        </figure>
+        <div>
+          <p class="eyebrow">Quick facts</p>
+          <h2 class="section-title">The basics</h2>
+          <div class="mt-6 facts-grid">
+            <div class="fact"><span class="label">Height</span><span class="value">5'7"</span></div>
+            <div class="fact"><span class="label">Weight</span><span class="value">135 lbs</span></div>
+            <div class="fact"><span class="label">Class</span><span class="value">2029</span></div>
+            <div class="fact"><span class="label">Jersey</span><span class="value">#7</span></div>
+            <div class="fact"><span class="label">Position</span><span class="value">WR / QB / Safety</span></div>
+            <div class="fact"><span class="label">Flag team</span><span class="value"><a href={MAXPREPS_TEAM} target="_blank" rel="noopener" class="link-gold">Clarke Central</a> (varsity)</span></div>
+            <div class="fact"><span class="label">Hometown</span><span class="value">Athens, GA</span></div>
+            <div class="fact"><span class="label">GPA</span><span class="value">3.74</span></div>
+            <div class="fact col-span-2 sm:col-span-1"><span class="label">NCAA ID</span><span class="value"><a href="https://web3.ncaa.org/ecwr3/" target="_blank" rel="noopener" class="link-gold">2509718485</a></span></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Schedule -->
-    {schedule.length > 0 && (
-    <section id="schedule" class="section">
-      <div class="max-w-5xl mx-auto px-4">
-        <h2 class="section-title">Upcoming schedule</h2>
-        <p class="mt-2 text-gray-600">Clarke Central varsity girls flag football &middot; Ayn wears <strong>#7</strong></p>
-        <div class="mt-6 card divide-y">
-          {schedule.map((g) => (
-            <div class="p-4 grid grid-cols-[6.5rem_1fr] sm:grid-cols-[8rem_6rem_1fr] gap-x-4 gap-y-0.5 items-baseline">
-              <span class="font-bold text-gray-900">{g.date}</span>
-              <span class="text-gray-600 text-sm sm:order-none">{g.time}</span>
-              <span class="col-span-2 sm:col-span-1 text-gray-900">
-                <span class="text-gray-500">{g.ha === '@' ? 'at' : 'vs'}</span> <span class="font-semibold">{g.opponent}</span>{g.region && <span class="ml-2 text-[11px] uppercase tracking-wider text-sky-700 font-semibold">Region</span>}
-                {g.note && <span class="block text-xs text-gray-500 mt-0.5">{g.note}</span>}
-              </span>
-            </div>
-          ))}
-        </div>
-        <p class="mt-3 text-xs text-gray-500"><a class="underline" href={MAXPREPS_SCHEDULE} target="_blank" rel="noopener">Schedule via MaxPreps</a></p>
+    <!-- 4. Speed -->
+    <section id="speed" class="section">
+      <div class="max-w-6xl mx-auto px-4">
+        <p class="eyebrow">Speed</p>
+        <h2 class="section-title">Track &amp; field</h2>
+        <ul class="mt-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <li class="stat-card"><span class="stat-big">8.86</span><span class="stat-label">60m, laser-timed (5A Georgia meet)</span></li>
+          <li class="stat-card"><span class="stat-big">Hurdles</span><span class="stat-label">Region track meet</span></li>
+          <li class="stat-card"><span class="stat-big">4x100</span><span class="stat-label">Relay leg, curve runner</span></li>
+          <li class="stat-card"><span class="stat-big">State</span><span class="stat-label">Track finalist, triple jump</span></li>
+        </ul>
+        <VideoGrid videos={speedVideos} />
       </div>
     </section>
-    )}
 
-    <!-- Academics -->
-    <section id="academics" class="section bg-gray-50">
-      <div class="max-w-5xl mx-auto px-4">
-        <h2 class="section-title">Academics</h2>
-        <div class="mt-6 grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- 5. Strength -->
+    <section id="strength" class="section bg-ink-2">
+      <div class="max-w-6xl mx-auto px-4">
+        <p class="eyebrow">Strength</p>
+        <h2 class="section-title">Weight room</h2>
+        <p class="mt-2 text-white/70">245 lb box squat for 5x5, 330 lb pin squats, and summer work.</p>
+        <VideoGrid videos={strengthVideos} />
+      </div>
+    </section>
+
+    <!-- Photo break: album gallery -->
+    <section id="photos" class="section">
+      <div class="max-w-6xl mx-auto px-4">
+        <p class="eyebrow">On the field</p>
+        <h2 class="section-title">Photos</h2>
+        <div class="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          {gallery.map((p) => (
+            <figure class="group">
+              <div class="photo-frame aspect-[3/4]">
+                <img src={p.src} alt={p.alt} width={p.w} height={p.h} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" style={`object-position:${p.pos}`} />
+              </div>
+              <figcaption class="mt-2 text-xs sm:text-sm text-white/65">{p.cap}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Two-sport athlete -->
+    <section id="two-sport" class="section bg-ink-2">
+      <div class="max-w-6xl mx-auto px-4">
+        <p class="eyebrow">Two-sport athlete</p>
+        <h2 class="section-title">Softball</h2>
+        <p class="mt-2 text-white/70">Outfielder for Top Gun Walker. Bats right, throws right.</p>
+        <ul class="mt-6 grid sm:grid-cols-2 gap-3">
+          <li class="honor"><span class="honor-year">2026</span><span>Alliance Fastpitch 16U Tier III National Runner-Up</span></li>
+          <li class="honor"><span class="honor-year">2025</span><span>Alliance Atlantic Region Champions</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 7. Academics -->
+    <section id="academics" class="section">
+      <div class="max-w-6xl mx-auto px-4">
+        <p class="eyebrow">Academics</p>
+        <h2 class="section-title">In the classroom</h2>
+        <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div class="card p-5"><span class="label">GPA</span><span class="value">3.74</span></div>
           <div class="card p-5"><span class="label">School</span><span class="value">Liberty University Online Academy</span></div>
           <div class="card p-5"><span class="label">Intended major</span><span class="value">Business (Finance)</span></div>
           <div class="card p-5"><span class="label">Honors</span><span class="value">BETA Club inductee, 2025-26</span></div>
         </div>
+        <p class="mt-3 text-sm text-white/55">Plays varsity flag football for Clarke Central.</p>
       </div>
     </section>
 
-    <!-- Contact -->
-    <section id="contact" class="section">
-      <div class="max-w-5xl mx-auto px-4">
-        <h2 class="section-title">Contact</h2>
-        <div class="mt-6 card p-6 md:p-8">
-          <p class="text-sm text-gray-500">X: <a class="underline" href="https://x.com/AynParkerUsry">@AynParkerUsry</a></p>
-          <p class="mt-1 text-sm text-gray-500">YouTube: <a class="underline" href="https://www.youtube.com/@APU-2029" target="_blank" rel="noopener">@APU-2029</a></p>
+    <!-- 8. Schedule -->
+    {schedule.length > 0 && (
+    <section id="schedule" class="section bg-ink-2">
+      <div class="max-w-6xl mx-auto px-4">
+        <p class="eyebrow">Schedule</p>
+        <h2 class="section-title">Come see her play</h2>
+        <p class="mt-2 text-white/70">Clarke Central varsity girls flag football &middot; Ayn wears <strong class="text-gold">#7</strong></p>
+        <div class="mt-6 card divide-y divide-white/10">
+          {schedule.map((g) => (
+            <div class="sched-row p-4 grid grid-cols-[6.5rem_1fr] sm:grid-cols-[8rem_6rem_1fr] gap-x-4 gap-y-0.5 items-baseline">
+              <span class="font-bold text-white">{g.date}</span>
+              <span class="text-white/60 text-sm sm:order-none">{g.time}</span>
+              <span class="col-span-2 sm:col-span-1 text-white">
+                <span class="text-white/50">{g.ha === '@' ? 'at' : 'vs'}</span> <span class="font-semibold">{g.opponent}</span>{g.region && <span class="badge-red ml-2">Region</span>}
+                {g.note && <span class="block text-xs text-white/50 mt-0.5">{g.note}</span>}
+              </span>
+            </div>
+          ))}
         </div>
+        <p class="mt-3 text-xs text-white/50"><a class="link-gold" href={MAXPREPS_SCHEDULE} target="_blank" rel="noopener">Schedule via MaxPreps</a></p>
       </div>
     </section>
+    )}
+
+    <!-- 9. Contact (form posts to /api/contact; no email or phone on the page) -->
+    <section id="contact" class="section">
+      <div class="max-w-6xl mx-auto px-4 grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-8">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2 class="section-title">Get in touch</h2>
+          <p class="mt-2 text-white/70">Coaches and recruiters: send a note and we'll get back to you.</p>
+          <form id="contact-form" class="mt-6 card p-5 md:p-7 grid sm:grid-cols-2 gap-4" novalidate>
+            <label class="field"><span>Name</span><input name="name" required maxlength="120" autocomplete="name" /></label>
+            <label class="field"><span>Role</span>
+              <select name="role" required>
+                <option value="" selected disabled>Choose one</option>
+                <option>College coach</option>
+                <option>Club/HS coach</option>
+                <option>Recruiter</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <label class="field sm:col-span-2"><span>School / program</span><input name="school" maxlength="160" autocomplete="organization" /></label>
+            <label class="field"><span>Email</span><input name="email" type="email" required maxlength="200" autocomplete="email" /></label>
+            <label class="field"><span>Phone <em>(optional)</em></span><input name="phone" type="tel" maxlength="40" autocomplete="tel" /></label>
+            <label class="field sm:col-span-2"><span>Message</span><textarea name="message" rows="5" required maxlength="5000"></textarea></label>
+            <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+            <div class="sm:col-span-2 flex flex-wrap items-center gap-4">
+              <button type="submit" class="btn-gold">Send message</button>
+              <p id="contact-status" class="text-sm" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </div>
+        <aside class="lg:pt-24">
+          <div class="card p-6">
+            <h3 class="font-bold text-white">More from Ayn</h3>
+            <p class="mt-3 text-white/70"><a class="link-gold font-semibold" href="https://www.youtube.com/@APU-2029" target="_blank" rel="noopener">YouTube: @APU-2029 &rarr;</a></p>
+            <p class="mt-2 text-white/70"><a class="link-gold font-semibold" href="https://x.com/AynParkerUsry" target="_blank" rel="noopener">X: @AynParkerUsry &rarr;</a></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+    <script is:inline>
+      (function () {
+        var f = document.getElementById('contact-form');
+        var st = document.getElementById('contact-status');
+        if (!f) return;
+        f.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var d = Object.fromEntries(new FormData(f).entries());
+          if (!d.name || !d.role || !d.email || !d.message) { st.className = 'text-sm text-glred-light'; st.textContent = 'Please fill in name, role, email and message.'; return; }
+          d.page_url = location.href;
+          var btn = f.querySelector('button[type=submit]');
+          btn.disabled = true; st.className = 'text-sm text-white/70'; st.textContent = 'Sending...';
+          fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) })
+            .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
+            .then(function (j) {
+              if (j && j.ok) { f.reset(); st.className = 'text-sm text-gold font-semibold'; st.textContent = 'Thanks, message received.'; }
+              else { st.className = 'text-sm text-glred-light'; st.textContent = (j && j.error) || 'Sorry, something went wrong. Please try again.'; }
+            })
+            .catch(function () { st.className = 'text-sm text-glred-light'; st.textContent = 'Sorry, something went wrong. Please try again.'; })
+            .finally(function () { btn.disabled = false; });
+        });
+      })();
+    </script>
   </main>
 
-  <footer class="bg-navy text-white/70 text-sm">
-    <div class="max-w-5xl mx-auto px-4 py-8 flex flex-col sm:flex-row justify-between gap-2">
+  <footer class="bg-ink border-t border-white/10 text-white/60 text-sm">
+    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row justify-between gap-2">
       <span>&copy; 2026 Ayn Parker Usry</span>
       <span>Class of 2029 &middot; Women's Flag Football</span>
     </div>
@@ -234,17 +337,54 @@ const MAXPREPS_SCHEDULE = 'https://www.maxpreps.com/ga/athens/clarke-central-gla
 </Layout>
 
 <style is:global>
-  .preview-banner { background:#fde047; color:#422006; text-align:center; font-size:.8rem; font-weight:700; padding:.4rem 1rem; }
-  .hero { background: radial-gradient(1200px 500px at 80% -10%, #1d5a8c 0%, transparent 60%), linear-gradient(160deg, #041d35 0%, #062a4b 60%, #0d3a5c 100%); }
-  .chip { display:inline-flex; align-items:center; padding:.35rem .8rem; border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); font-weight:600; }
-  .btn-light { display:inline-flex; padding:.75rem 1.25rem; border-radius:.6rem; background:#fff; color:#062a4b; font-weight:700; }
-  .btn-outline { display:inline-flex; padding:.75rem 1.25rem; border-radius:.6rem; border:2px solid rgba(255,255,255,.6); color:#fff; font-weight:700; }
+  /* Clarke Central palette, sampled from album photos (portrait IMG_6520): gold #EEA43B, red #9A1F21, black #090909 */
+  :root { --ink:#090909; --ink-2:#121212; --ink-3:#1a1a1a; --gold:#EEA43B; --gold-light:#F4BE6A; --red:#9A1F21; --red-light:#C2373A; }
+  body { background:var(--ink); color:#fff; }
+  .preview-banner { background:var(--gold); color:var(--ink); text-align:center; font-size:.8rem; font-weight:800; padding:.4rem 1rem; }
+  .nav-link { transition:color .15s; } .nav-link:hover { color:var(--gold); }
+  .hero { min-height: 92vh; display:flex; align-items:flex-end; background:var(--ink); }
+  .hero-img { object-position: 62% 40%; }
+  .hero-fade { background: linear-gradient(180deg, rgba(9,9,9,.15) 0%, rgba(9,9,9,0) 30%, rgba(9,9,9,.55) 55%, rgba(9,9,9,.94) 76%, var(--ink) 100%); }
+  .hero-inner { width:100%; padding-top: 52vh; padding-bottom: 2.75rem; }
+  @media (min-width: 768px) {
+    .hero { min-height: 640px; height: 86vh; max-height: 900px; align-items:center; }
+    .hero-img { object-position: 62% 45%; }
+    .hero-fade { background:
+      linear-gradient(90deg, rgba(9,9,9,.94) 0%, rgba(9,9,9,.82) 28%, rgba(9,9,9,.35) 46%, rgba(9,9,9,0) 60%),
+      linear-gradient(180deg, rgba(9,9,9,0) 62%, rgba(9,9,9,.7) 84%, var(--ink) 100%); }
+    .hero-inner { padding-top: 4rem; padding-bottom: 4rem; }
+  }
+  .chip { display:inline-flex; align-items:center; padding:.35rem .8rem; border-radius:999px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22); font-weight:600; }
+  .chip-gold { background:var(--gold); border-color:var(--gold); color:var(--ink); font-weight:800; }
+  .btn-gold { display:inline-flex; padding:.75rem 1.25rem; border-radius:.6rem; background:var(--gold); color:var(--ink); font-weight:800; transition:background .15s; }
+  .btn-gold:hover { background:var(--gold-light); } .btn-gold:disabled { opacity:.6; }
+  .btn-outline { display:inline-flex; padding:.75rem 1.25rem; border-radius:.6rem; border:2px solid rgba(255,255,255,.6); color:#fff; font-weight:700; transition:border-color .15s, color .15s; }
+  .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+  .link-gold { color:var(--gold); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:2px; } .link-gold:hover { color:var(--gold-light); }
   .section { padding: 3.5rem 0; }
   @media (min-width: 768px) { .section { padding: 5rem 0; } }
-  .section-title { font-size:1.75rem; font-weight:800; color:#062a4b; letter-spacing:-.01em; }
-  .card { background:#fff; border:1px solid #e5e7eb; border-radius:1rem; box-shadow:0 1px 2px rgba(0,0,0,.04); }
-  .fact { background:#fff; padding:1.1rem 1.25rem; display:flex; flex-direction:column; gap:.35rem; }
-  .label { display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.12em; color:#6b7280; font-weight:600; }
-  .value { display:inline-block; font-size:1.15rem; font-weight:700; color:#111827; margin-top:.25rem; }
+  .bg-ink-2 { background:var(--ink-2); }
+  .eyebrow { font-size:.75rem; text-transform:uppercase; letter-spacing:.2em; font-weight:800; color:var(--gold); }
+  .eyebrow::before { content:''; display:inline-block; width:1.5rem; height:3px; background:var(--red-light); vertical-align:middle; margin-right:.6rem; border-radius:2px; }
+  .section-title { margin-top:.35rem; font-size:1.9rem; font-weight:800; color:#fff; letter-spacing:-.01em; line-height:1.15; }
+  .card { background:var(--ink-3); border:1px solid rgba(255,255,255,.1); border-radius:1rem; }
+  .facts-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.1); border-radius:1rem; overflow:hidden; }
+  @media (min-width: 640px) { .facts-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+  .fact { background:var(--ink-3); padding:1rem 1.15rem; display:flex; flex-direction:column; gap:.3rem; }
+  .label { display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; color:rgba(255,255,255,.55); font-weight:700; }
+  .value { display:inline-block; font-size:1.1rem; font-weight:700; color:#fff; margin-top:.25rem; }
   .fact .value { margin-top:0; align-self:flex-start; }
+  .photo-frame { overflow:hidden; border-radius:1rem; background:#000; border:1px solid rgba(255,255,255,.1); }
+  .stat-card { background:var(--ink-3); border:1px solid rgba(255,255,255,.1); border-left:4px solid var(--gold); border-radius:.85rem; padding:1rem 1.15rem; display:flex; flex-direction:column; gap:.2rem; }
+  .stat-big { font-size:1.6rem; font-weight:800; color:var(--gold); line-height:1.1; }
+  .stat-label { font-size:.9rem; color:rgba(255,255,255,.75); }
+  .honor { display:flex; gap:.9rem; align-items:center; background:var(--ink-3); border:1px solid rgba(255,255,255,.1); border-radius:.85rem; padding:1rem 1.15rem; font-weight:600; }
+  .honor-year { flex:none; background:var(--red); color:#fff; font-weight:800; font-size:.8rem; padding:.25rem .55rem; border-radius:.4rem; }
+  .badge-red { display:inline-block; font-size:10px; text-transform:uppercase; letter-spacing:.1em; font-weight:800; background:var(--red); color:#fff; padding:.1rem .4rem; border-radius:.3rem; vertical-align:middle; }
+  .sched-row { transition:background .15s; } .sched-row:hover { background:rgba(238,164,59,.07); }
+  .field { display:flex; flex-direction:column; gap:.35rem; font-size:.8rem; font-weight:700; color:rgba(255,255,255,.75); }
+  .field em { font-weight:500; font-style:normal; color:rgba(255,255,255,.45); }
+  .field input, .field select, .field textarea { background:#0f0f0f; border:1px solid rgba(255,255,255,.18); border-radius:.55rem; padding:.65rem .8rem; color:#fff; font-size:1rem; font-weight:500; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(238,164,59,.25); }
+  .hp { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
 </style>

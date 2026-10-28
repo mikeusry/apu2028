@@ -9,6 +9,9 @@ export default {
           light: '#0d3a5c',
           dark: '#041d35',
         },
+        ink: { DEFAULT: '#090909', 2: '#121212', 3: '#1a1a1a' },
+        gold: { DEFAULT: '#EEA43B', light: '#F4BE6A', dark: '#D68C35' },
+        glred: { DEFAULT: '#9A1F21', light: '#C2373A' },
         accent: {
           DEFAULT: '#c8ccd1',
           light: '#e8eaed',

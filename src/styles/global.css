@@ -8,7 +8,7 @@
   }
 
   body {
-    @apply bg-white text-gray-900 font-sans antialiased;
+    @apply bg-ink text-white font-sans antialiased;
   }
 }
 
