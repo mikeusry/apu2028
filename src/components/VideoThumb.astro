@@ -1,0 +1,40 @@
+---
+// One Mux thumbnail button. Clicking opens the shared lightbox player in index.astro (it binds every .video-thumb).
+interface Video { id: string; playbackId: string; title: string; caption: string; thumbTime?: number; vertical?: boolean }
+const { v, size = 'sm', label } = Astro.props as { v: Video; size?: 'lg' | 'md' | 'sm'; label?: string };
+const w = size === 'sm' ? 640 : 1280;
+---
+<button
+  type="button"
+  class={`video-thumb vt-${size} group text-left self-start w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-xl`}
+  data-playback-id={v.playbackId}
+  data-video-id={v.id}
+  data-title={v.caption}
+  data-vertical={v.vertical ? '1' : undefined}
+  aria-label={`Play: ${v.caption}`}
+>
+  <div class={`relative ${size === 'lg' ? 'aspect-video lg:aspect-[21/9]' : 'aspect-video'} rounded-xl overflow-hidden ring-1 ring-white/10 group-hover:ring-2 group-hover:ring-gold transition-all bg-black`}>
+    {v.vertical && (
+      <img src={`https://image.mux.com/${v.playbackId}/thumbnail.jpg?width=320&time=${v.thumbTime ?? 5}`} alt="" aria-hidden="true" loading="lazy" class="absolute inset-0 w-full h-full object-cover blur-md opacity-75 scale-110" />
+    )}
+    <img
+      src={`https://image.mux.com/${v.playbackId}/thumbnail.jpg?width=${w}&time=${v.thumbTime ?? 5}`}
+      alt={v.caption}
+      loading="lazy"
+      width={v.vertical ? 360 : w}
+      height={v.vertical ? 640 : Math.round((w * 9) / 16)}
+      class={`relative w-full h-full ${v.vertical ? 'object-contain' : 'object-cover'} group-hover:scale-[1.03] transition-transform duration-300`}
+    />
+    {size === 'lg' && <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" aria-hidden="true"></div>}
+    <div class={`absolute inset-0 ${size === 'lg' ? '' : 'bg-black/25 group-hover:bg-black/40'} transition-colors flex items-center justify-center`}>
+      <div class={`rounded-full bg-gold flex items-center justify-center group-hover:scale-110 transition-transform ${size === 'lg' ? 'w-16 h-16 sm:w-20 sm:h-20' : size === 'md' ? 'w-12 h-12 sm:w-14 sm:h-14' : 'w-10 h-10 sm:w-12 sm:h-12'}`}>
+        <svg class={`${size === 'lg' ? 'w-8 h-8 sm:w-10 sm:h-10' : 'w-6 h-6'} ml-1`} style="color:#090909" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+    </div>
+    {label && (
+      <span class="absolute left-3 top-3 sm:left-4 sm:top-4 bg-gold text-ink text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.14em] px-2.5 py-1 rounded-md">{label}</span>
+    )}
+  </div>
+  <p class={`mt-2 font-bold leading-snug text-white group-hover:text-gold transition-colors ${size === 'lg' ? 'text-base sm:text-lg' : size === 'md' ? 'text-sm sm:text-base' : 'text-xs sm:text-sm'}`}>{v.caption}</p>
+  {size !== 'sm' && <p class="text-xs sm:text-sm text-white/75 mt-0.5">{v.title}</p>}
+</button>

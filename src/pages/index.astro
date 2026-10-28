@@ -6,19 +6,30 @@ import VideoGrid from '../components/VideoGrid.astro';
 // All site videos are on Mux (public playback). One line per video in src/data/site-videos.json; order = display order.
 import videos from '../data/site-videos.json';
 const byId = (ids: string[]) => ids.map((id) => videos.find((v) => v.id === id)).filter(Boolean) as typeof videos;
+// First game reel = featured "Start here" clip (Elbert County); the rest go in the smaller grid.
 const gameVideos = videos.filter((v) => v.category === 'game');
 const speedVideos = byId(['60m-dash-886', 'hurdles-region', '4x100-relay']);
 const strengthVideos = byId(['box-squat-245x5x5', 'pin-squat-330', 'summer-workouts']);
 // Upcoming Clarke Central games, copied from MaxPreps (src/data/flag-schedule.json). Section hides when empty.
 import schedule from '../data/flag-schedule.json';
+const NEXT_GAMES = 3;
+const nextGames = schedule.slice(0, NEXT_GAMES);
+const laterGames = schedule.slice(NEXT_GAMES);
 const MAXPREPS_SCHEDULE = 'https://www.maxpreps.com/ga/athens/clarke-central-gladiators/flag-football/girls/fall/26-27/schedule/';
 const MAXPREPS_TEAM = 'https://www.maxpreps.com/ga/athens/clarke-central-gladiators/flag-football/girls/fall/';
+
+// PERSONAL INTRO: 2-3 sentences in Ayn's own words, shown beside the portrait.
+// Leave empty until she writes it; the block is not rendered while this is ''.
+const intro = '';
+
 // Album photos (Photos > "AP Flag Football"); resized, EXIF/GPS stripped. Crop/resize only.
-const gallery = [
-  { src: '/photos/ayn-qb-throw-pink.jpg', w: 900, h: 1281, alt: 'Ayn #7 setting to throw in a pink Clarke Central jersey', cap: 'At QB · Oct 17, 2026', pos: '50% 35%' },
-  { src: '/photos/ayn-7-ball-carry-night.jpg', w: 1200, h: 854, alt: 'Ayn #7 carrying the ball at night', cap: 'Ball in hand · Oct 17, 2026', pos: '50% 40%' },
-  { src: '/photos/ayn-7-route-white.jpg', w: 842, h: 1600, alt: 'Ayn #7 in a white Clarke Central jersey on the field', cap: 'Clarke Central #7 · Sep 23, 2026', pos: '30% 55%' },
-  { src: '/photos/ayn-7-white-sideline.jpg', w: 1200, h: 800, alt: 'Ayn #7 in white, seen from behind', cap: 'Clarke Central #7 · Sep 23, 2026', pos: '55% 40%' },
+// Editorial layout: one lead image + three supporting shots. The two night/stadium shots get a light CSS
+// brightness lift (.lift) so the set reads evenly; the files themselves are untouched.
+const leadPhoto = { src: '/photos/ayn-7-ball-carry-night.jpg', w: 1200, h: 854, alt: 'Ayn Parker #7 carrying the ball upfield', cap: 'Ball in hand · Oct 17, 2026', pos: '50% 42%' };
+const supportPhotos = [
+  { src: '/photos/ayn-qb-throw-pink.jpg', w: 900, h: 1281, alt: 'Ayn Parker #7 setting to throw in a pink Clarke Central jersey', cap: 'At QB · Oct 17', pos: '38% 40%', cls: 'ph-tall', lift: false },
+  { src: '/photos/ayn-7-white-sideline.jpg', w: 1200, h: 800, alt: 'Ayn Parker #7 in white, seen from behind', cap: 'Sep 23', pos: '82% 35%', cls: '', lift: true },
+  { src: '/photos/ayn-7-route-white.jpg', w: 842, h: 1600, alt: 'Ayn Parker #7 in a white Clarke Central jersey on the field', cap: 'Sep 23', pos: '22% 62%', cls: '', lift: true },
 ];
 ---
 
@@ -26,9 +37,9 @@ const gallery = [
   <div class="preview-banner">Preview draft. Not launched.</div>
 
   <header class="sticky top-0 z-30 bg-ink/90 backdrop-blur border-b border-white/10 text-white">
-    <nav class="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
+    <nav class="max-w-6xl mx-auto flex items-center justify-between px-4 py-2 md:py-3">
       <a href="#top" class="font-extrabold tracking-tight">APU <span class="text-gold">2029</span></a>
-      <div class="hidden md:flex gap-5 text-sm font-medium text-white/80">
+      <div class="hidden md:flex gap-5 text-sm font-medium text-white/85">
         <a href="#film" class="nav-link">Film</a>
         <a href="#facts" class="nav-link">Facts</a>
         <a href="#speed" class="nav-link">Speed</a>
@@ -38,25 +49,25 @@ const gallery = [
         {schedule.length > 0 && <a href="#schedule" class="nav-link">Schedule</a>}
         <a href="#contact" class="nav-link">Contact</a>
       </div>
-      <a href="#contact" class="md:hidden text-sm font-bold bg-gold text-ink px-3 py-1.5 rounded-md">Contact</a>
+      <a href="#contact" class="md:hidden text-xs font-bold bg-gold text-ink px-3 py-1 rounded-md">Contact</a>
     </nav>
   </header>
 
   <main id="top">
     <!-- 1. Hero: running photo, dark fade so text stays readable; Ayn sits ~62% across the frame -->
     <section class="hero relative overflow-hidden text-white">
-      <img src="/photos/hero-ayn-run-7.jpg" alt="Ayn Parker Usry, #7, running with the ball" width="1591" height="1045" fetchpriority="high" class="hero-img absolute inset-0 w-full h-full object-cover" />
+      <img src="/photos/hero-ayn-run-7.jpg" alt="Ayn Parker, #7, running with the ball" width="1591" height="1045" fetchpriority="high" class="hero-img absolute inset-0 w-full h-full object-cover" />
       <div class="hero-fade absolute inset-0" aria-hidden="true"></div>
       <div class="relative max-w-6xl mx-auto px-4 hero-inner">
         <div class="max-w-md">
           <p class="uppercase tracking-[0.2em] text-xs md:text-sm text-gold font-bold">Women's flag football</p>
-          <h1 class="mt-3 text-4xl md:text-6xl font-extrabold leading-[1.05]">Ayn Parker Usry</h1>
+          <h1 class="mt-3 text-4xl md:text-6xl font-extrabold leading-[1.05]">Ayn Parker</h1>
           <div class="mt-5 flex flex-wrap gap-2 text-sm md:text-base">
             <span class="chip chip-gold">#7</span>
             <span class="chip">Class of 2029</span>
             <span class="chip">WR / QB / Safety</span>
           </div>
-          <p class="mt-5 text-white/80"><a href={MAXPREPS_TEAM} target="_blank" rel="noopener" class="link-gold">Clarke Central</a> &middot; Athens, GA</p>
+          <p class="mt-5 text-white/85"><a href={MAXPREPS_TEAM} target="_blank" rel="noopener" class="link-gold">Clarke Central</a> &middot; Athens, GA</p>
           <div class="mt-7 flex flex-wrap gap-3">
             <a href="#film" class="btn-gold">Watch game film</a>
             <a href="#contact" class="btn-outline">Contact</a>
@@ -65,12 +76,12 @@ const gallery = [
       </div>
     </section>
 
-    <!-- 2. Game film -->
-    <section id="film" class="section">
+    <!-- 2. Game film: one featured reel, other games smaller below -->
+    <section id="film" class="section pt-8 md:pt-12">
       <div class="max-w-6xl mx-auto px-4">
         <p class="eyebrow">Game film</p>
         <h2 class="section-title">Clarke Central highlights</h2>
-        <VideoGrid videos={gameVideos} />
+        <VideoGrid videos={gameVideos} variant="feature" label="Start here · Flag football highlights" />
       </div>
     </section>
 
@@ -146,161 +157,203 @@ const gallery = [
       })();
     </script>
 
-    <!-- 3. Photo break: portrait beside Quick facts -->
+    <!-- 3. Portrait + quick facts (GPA and major live in Academics only) -->
     <section id="facts" class="section bg-ink-2">
-      <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-8 md:gap-12 items-center">
-        <figure class="photo-frame aspect-[4/5] md:aspect-[3/4]">
-          <img src="/photos/ayn-7-portrait-black.jpg" alt="Ayn #7 in a black Clarke Central jersey" width="900" height="1831" loading="lazy" class="w-full h-full object-cover" style="object-position:50% 22%" />
+      <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-6 md:gap-12 items-center">
+        <figure class="photo-frame aspect-[5/4] md:aspect-[3/4]">
+          <img src="/photos/ayn-7-portrait-black.jpg" alt="Ayn Parker #7 in a black Clarke Central jersey" width="900" height="1831" loading="lazy" class="w-full h-full object-cover" style="object-position:50% 20%" />
         </figure>
         <div>
           <p class="eyebrow">Quick facts</p>
           <h2 class="section-title">The basics</h2>
-          <div class="mt-6 facts-grid">
-            <div class="fact"><span class="label">Height</span><span class="value">5'7"</span></div>
-            <div class="fact"><span class="label">Weight</span><span class="value">135 lbs</span></div>
-            <div class="fact"><span class="label">Class</span><span class="value">2029</span></div>
-            <div class="fact"><span class="label">Jersey</span><span class="value">#7</span></div>
-            <div class="fact"><span class="label">Position</span><span class="value">WR / QB / Safety</span></div>
-            <div class="fact"><span class="label">Flag team</span><span class="value"><a href={MAXPREPS_TEAM} target="_blank" rel="noopener" class="link-gold">Clarke Central</a> (varsity)</span></div>
-            <div class="fact"><span class="label">Hometown</span><span class="value">Athens, GA</span></div>
-            <div class="fact"><span class="label">GPA</span><span class="value">3.74</span></div>
-            <div class="fact col-span-2 sm:col-span-1"><span class="label">NCAA ID</span><span class="value"><a href="https://web3.ncaa.org/ecwr3/" target="_blank" rel="noopener" class="link-gold">2509718485</a></span></div>
+          {/* PERSONAL INTRO SLOT: renders only when `intro` (frontmatter) has text. */}
+          {intro && <p class="intro mt-4">{intro}</p>}
+          <dl class="mt-5 facts-grid">
+            <div class="fact col-span-2"><dt class="label">Full name</dt><dd class="value">Aynsley Parker Usry</dd></div>
+            <div class="fact"><dt class="label">Height</dt><dd class="value">5'7"</dd></div>
+            <div class="fact"><dt class="label">Weight</dt><dd class="value">135 lbs</dd></div>
+            <div class="fact"><dt class="label">Class</dt><dd class="value">2029</dd></div>
+            <div class="fact"><dt class="label">Position</dt><dd class="value">WR / QB / Safety</dd></div>
+            <div class="fact"><dt class="label">Flag team</dt><dd class="value"><a href={MAXPREPS_TEAM} target="_blank" rel="noopener" class="link-gold">Clarke Central</a> varsity</dd></div>
+            <div class="fact"><dt class="label">Hometown</dt><dd class="value">Athens, GA</dd></div>
+            <div class="fact col-span-2"><dt class="label">NCAA ID</dt><dd class="value"><a href="https://web3.ncaa.org/ecwr3/" target="_blank" rel="noopener" class="link-gold">2509718485</a></dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3b. Family (text approved by Mike, Oct 28 2026). No article photos or UGA logos. -->
+    <section id="family" class="bg-ink-2 pb-10 md:pb-14">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="family border-t border-white/15 pt-6 md:pt-8 md:grid md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-12">
+          <h2 class="section-title md:text-right">Family</h2>
+          <div>
+            <p class="text-white/90 leading-relaxed"><strong class="text-gold">Bulldog roots.</strong> Ayn Parker's mom, Karin (Lichey) Usry, was an 11-time All-American gymnast at Georgia and won NCAA titles with the GymDogs in 1998 and 1999. As a freshman in 1996 she became the first collegiate gymnast to score a perfect 40. Her dad, Mike Usry, was a quarterback for the Bulldogs from 1996 to 1999. Ayn Parker grew up in Athens around that work ethic.</p>
+            <p class="mt-3 text-sm"><a class="link-gold font-semibold" href="https://www.redandblack.com/sports/this-was-home-former-bulldogs-karin-and-mike-usry-raise-family-in-athens/article_73c4a170-b9b0-11ea-8720-bb60a2e7f32f.html" target="_blank" rel="noopener">Read the Red &amp; Black story</a></p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 4. Speed -->
+    <!-- 4. Speed: featured number, other events, achievement, then clips -->
     <section id="speed" class="section">
-      <div class="max-w-6xl mx-auto px-4">
-        <p class="eyebrow">Speed</p>
-        <h2 class="section-title">Track &amp; field</h2>
-        <ul class="mt-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <li class="stat-card"><span class="stat-big">8.86</span><span class="stat-label">60m, laser-timed (5A Georgia meet)</span></li>
-          <li class="stat-card"><span class="stat-big">Hurdles</span><span class="stat-label">Region track meet</span></li>
-          <li class="stat-card"><span class="stat-big">4x100</span><span class="stat-label">Relay leg, curve runner</span></li>
-          <li class="stat-card"><span class="stat-big">State</span><span class="stat-label">Track finalist, triple jump</span></li>
-        </ul>
-        <VideoGrid videos={speedVideos} />
+      <div class="max-w-6xl mx-auto px-4 lg:grid lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-12 lg:items-start">
+        <div>
+          <p class="eyebrow">Speed</p>
+          <h2 class="section-title">Track &amp; field</h2>
+          <div class="mt-5 grid grid-cols-1 sm:grid-cols-[auto_1fr] lg:grid-cols-1 gap-5 sm:gap-10 lg:gap-5 items-center">
+            <div>
+              <p class="text-6xl md:text-7xl font-extrabold text-gold leading-none tracking-tight">8.86<span class="text-2xl md:text-3xl ml-1.5 text-white">sec</span></p>
+              <p class="mt-2 text-sm font-bold uppercase tracking-[0.14em] text-white">60m &middot; laser-timed</p>
+              <p class="text-sm text-white/75">5A Georgia meet</p>
+            </div>
+            <div class="sm:border-l sm:border-white/15 sm:pl-10 lg:border-l-0 lg:pl-0 lg:border-t lg:pt-4">
+              <p class="label">Other events</p>
+              <ul class="mt-1.5 space-y-1 text-white">
+                <li><span class="font-semibold">Hurdles</span> <span class="text-white/75">&middot; region track meet</span></li>
+                <li><span class="font-semibold">4x100 relay</span> <span class="text-white/75">&middot; curve leg</span></li>
+              </ul>
+              <p class="mt-4 inline-flex flex-wrap items-center gap-2 text-white"><span class="badge-red">Achievement</span><span class="font-semibold">State finalist &middot; triple jump</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="lg:-mt-5"><VideoGrid videos={speedVideos} /></div>
       </div>
     </section>
 
-    <!-- 5. Strength -->
+    <!-- 5. Strength: numbers inline with the heading, then clips -->
     <section id="strength" class="section bg-ink-2">
-      <div class="max-w-6xl mx-auto px-4">
-        <p class="eyebrow">Strength</p>
-        <h2 class="section-title">Weight room</h2>
-        <p class="mt-2 text-white/70">245 lb box squat for 5x5, 330 lb pin squats, and summer work.</p>
-        <VideoGrid videos={strengthVideos} />
+      <div class="max-w-6xl mx-auto px-4 lg:grid lg:grid-cols-[minmax(0,8fr)_minmax(0,4fr)] lg:gap-12 lg:items-start">
+        <div class="lg:order-2">
+          <p class="eyebrow">Strength</p>
+          <h2 class="section-title">Weight room</h2>
+          <dl class="mt-4 flex gap-8">
+            <div class="flex flex-col-reverse"><dt class="mt-1 text-sm text-white/80">Box squat, 5x5</dt><dd class="text-4xl font-extrabold text-gold leading-none">245<span class="text-base text-white ml-1">lb</span></dd></div>
+            <div class="flex flex-col-reverse"><dt class="mt-1 text-sm text-white/80">Pin squat</dt><dd class="text-4xl font-extrabold text-gold leading-none">330<span class="text-base text-white ml-1">lb</span></dd></div>
+          </dl>
+        </div>
+        <div class="lg:order-1 lg:-mt-5"><VideoGrid videos={strengthVideos} /></div>
       </div>
     </section>
 
-    <!-- Photo break: album gallery -->
+    <!-- 6. Photos: editorial (one lead + three supporting) -->
     <section id="photos" class="section">
       <div class="max-w-6xl mx-auto px-4">
         <p class="eyebrow">On the field</p>
         <h2 class="section-title">Photos</h2>
-        <div class="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {gallery.map((p) => (
-            <figure class="group">
-              <div class="photo-frame aspect-[3/4]">
-                <img src={p.src} alt={p.alt} width={p.w} height={p.h} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" style={`object-position:${p.pos}`} />
-              </div>
-              <figcaption class="mt-2 text-xs sm:text-sm text-white/65">{p.cap}</figcaption>
+        <div class="mt-5 photo-ed">
+          <figure class="ph-lead photo-frame relative">
+            <img src={leadPhoto.src} alt={leadPhoto.alt} width={leadPhoto.w} height={leadPhoto.h} loading="lazy" class="w-full h-full object-cover" style={`object-position:${leadPhoto.pos}`} />
+            <figcaption class="ph-cap">{leadPhoto.cap}</figcaption>
+          </figure>
+          {supportPhotos.map((p) => (
+            <figure class={`photo-frame relative ${p.cls}`}>
+              <img src={p.src} alt={p.alt} width={p.w} height={p.h} loading="lazy" class={`w-full h-full object-cover ${p.lift ? 'lift' : ''}`} style={`object-position:${p.pos}`} />
+              <figcaption class="ph-cap hidden md:block">{p.cap}</figcaption>
             </figure>
           ))}
         </div>
       </div>
     </section>
 
-    <!-- 6. Two-sport athlete -->
-    <section id="two-sport" class="section bg-ink-2">
-      <div class="max-w-6xl mx-auto px-4">
-        <p class="eyebrow">Two-sport athlete</p>
-        <h2 class="section-title">Softball</h2>
-        <p class="mt-2 text-white/70">Outfielder for Top Gun Walker. Bats right, throws right.</p>
-        <ul class="mt-6 grid sm:grid-cols-2 gap-3">
-          <li class="honor"><span class="honor-year">2026</span><span>Alliance Fastpitch 16U Tier III National Runner-Up</span></li>
-          <li class="honor"><span class="honor-year">2025</span><span>Alliance Atlantic Region Champions</span></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- 7. Academics -->
-    <section id="academics" class="section">
-      <div class="max-w-6xl mx-auto px-4">
-        <p class="eyebrow">Academics</p>
-        <h2 class="section-title">In the classroom</h2>
-        <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div class="card p-5"><span class="label">GPA</span><span class="value">3.74</span></div>
-          <div class="card p-5"><span class="label">School</span><span class="value">Liberty University Online Academy</span></div>
-          <div class="card p-5"><span class="label">Intended major</span><span class="value">Business (Finance)</span></div>
-          <div class="card p-5"><span class="label">Honors</span><span class="value">BETA Club inductee, 2025-26</span></div>
+    <!-- 7. Softball + Academics side by side (one clean info block, no cards) -->
+    <section class="section bg-ink-2">
+      <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-10 md:gap-0">
+        <div id="two-sport" class="md:pr-12">
+          <p class="eyebrow">Two-sport athlete</p>
+          <h2 class="section-title">Softball</h2>
+          <p class="mt-2 text-white/80">Outfielder for Top Gun Walker. Bats right, throws right.</p>
+          <ul class="mt-4 space-y-2.5">
+            <li class="flex gap-3 items-baseline"><span class="honor-year">2026</span><span class="font-semibold">Alliance Fastpitch 16U Tier III National Runner-Up</span></li>
+            <li class="flex gap-3 items-baseline"><span class="honor-year">2025</span><span class="font-semibold">Alliance Atlantic Region Champions</span></li>
+          </ul>
         </div>
-        <p class="mt-3 text-sm text-white/55">Plays varsity flag football for Clarke Central.</p>
+        <div id="academics" class="md:pl-12 md:border-l md:border-white/15">
+          <p class="eyebrow">Academics</p>
+          <h2 class="section-title">In the classroom</h2>
+          <dl class="mt-4 info-block">
+            <div><dt>GPA</dt><dd class="text-gold text-xl font-extrabold">3.74</dd></div>
+            <div><dt>School</dt><dd>Liberty University Online Academy</dd></div>
+            <div><dt>Intended major</dt><dd>Business (Finance)</dd></div>
+            <div><dt>Honors</dt><dd>BETA Club inductee, 2025-26</dd></div>
+          </dl>
+        </div>
       </div>
     </section>
 
-    <!-- 8. Schedule -->
+    <!-- 8. Schedule: next 3 games, rest behind an expander -->
     {schedule.length > 0 && (
-    <section id="schedule" class="section bg-ink-2">
-      <div class="max-w-6xl mx-auto px-4">
+    <section id="schedule" class="section">
+      <div class="max-w-3xl mx-auto px-4">
         <p class="eyebrow">Schedule</p>
         <h2 class="section-title">Come see her play</h2>
-        <p class="mt-2 text-white/70">Clarke Central varsity girls flag football &middot; Ayn wears <strong class="text-gold">#7</strong></p>
-        <div class="mt-6 card divide-y divide-white/10">
-          {schedule.map((g) => (
-            <div class="sched-row p-4 grid grid-cols-[6.5rem_1fr] sm:grid-cols-[8rem_6rem_1fr] gap-x-4 gap-y-0.5 items-baseline">
+        <p class="mt-2 text-white/80">Clarke Central varsity girls flag football &middot; Ayn Parker wears <strong class="text-gold">#7</strong></p>
+        <div class="mt-5 sched">
+          {nextGames.map((g) => (
+            <div class="sched-row">
               <span class="font-bold text-white">{g.date}</span>
-              <span class="text-white/60 text-sm sm:order-none">{g.time}</span>
+              <span class="text-white/75 text-sm">{g.time}</span>
               <span class="col-span-2 sm:col-span-1 text-white">
-                <span class="text-white/50">{g.ha === '@' ? 'at' : 'vs'}</span> <span class="font-semibold">{g.opponent}</span>{g.region && <span class="badge-red ml-2">Region</span>}
-                {g.note && <span class="block text-xs text-white/50 mt-0.5">{g.note}</span>}
+                <span class="text-white/75">{g.ha === '@' ? 'at' : 'vs'}</span> <span class="font-semibold">{g.opponent}</span>{g.region && <span class="badge-red ml-2">Region</span>}
+                {g.note && <span class="block text-xs text-white/75 mt-0.5">{g.note}</span>}
               </span>
             </div>
           ))}
+          {laterGames.length > 0 && (
+            <details class="sched-more">
+              <summary class="sched-toggle"><span class="more">Show full schedule ({schedule.length} games)</span><span class="less">Show fewer</span></summary>
+              {laterGames.map((g) => (
+                <div class="sched-row">
+                  <span class="font-bold text-white">{g.date}</span>
+                  <span class="text-white/75 text-sm">{g.time}</span>
+                  <span class="col-span-2 sm:col-span-1 text-white">
+                    <span class="text-white/75">{g.ha === '@' ? 'at' : 'vs'}</span> <span class="font-semibold">{g.opponent}</span>{g.region && <span class="badge-red ml-2">Region</span>}
+                    {g.note && <span class="block text-xs text-white/75 mt-0.5">{g.note}</span>}
+                  </span>
+                </div>
+              ))}
+            </details>
+          )}
         </div>
-        <p class="mt-3 text-xs text-white/50"><a class="link-gold" href={MAXPREPS_SCHEDULE} target="_blank" rel="noopener">Schedule via MaxPreps</a></p>
+        <p class="mt-3 text-xs text-white/75"><a class="link-gold" href={MAXPREPS_SCHEDULE} target="_blank" rel="noopener">Schedule via MaxPreps</a></p>
       </div>
     </section>
     )}
 
     <!-- 9. Contact (form posts to /api/contact; no email or phone on the page) -->
-    <section id="contact" class="section">
-      <div class="max-w-6xl mx-auto px-4 grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-8">
+    <section id="contact" class="section bg-ink-2">
+      <div class="max-w-6xl mx-auto px-4 grid lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] gap-6 lg:gap-12">
         <div>
           <p class="eyebrow">Contact</p>
           <h2 class="section-title">Get in touch</h2>
-          <p class="mt-2 text-white/70">Coaches and recruiters: send a note and we'll get back to you.</p>
-          <form id="contact-form" class="mt-6 card p-5 md:p-7 grid sm:grid-cols-2 gap-4" novalidate>
-            <label class="field"><span>Name</span><input name="name" required maxlength="120" autocomplete="name" /></label>
-            <label class="field"><span>Role</span>
-              <select name="role" required>
-                <option value="" selected disabled>Choose one</option>
-                <option>College coach</option>
-                <option>Club/HS coach</option>
-                <option>Recruiter</option>
-                <option>Other</option>
-              </select>
-            </label>
-            <label class="field sm:col-span-2"><span>School / program</span><input name="school" maxlength="160" autocomplete="organization" /></label>
-            <label class="field"><span>Email</span><input name="email" type="email" required maxlength="200" autocomplete="email" /></label>
-            <label class="field"><span>Phone <em>(optional)</em></span><input name="phone" type="tel" maxlength="40" autocomplete="tel" /></label>
-            <label class="field sm:col-span-2"><span>Message</span><textarea name="message" rows="5" required maxlength="5000"></textarea></label>
-            <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
-            <div class="sm:col-span-2 flex flex-wrap items-center gap-4">
-              <button type="submit" class="btn-gold">Send message</button>
-              <p id="contact-status" class="text-sm" role="status" aria-live="polite"></p>
-            </div>
-          </form>
+          <p class="mt-2 text-white/80">Coaches and recruiters: send a note and we'll get back to you.</p>
+          <p class="mt-4 text-sm text-white/80">More from Ayn Parker:
+            <a class="link-gold font-semibold ml-1" href="https://www.youtube.com/@APU-2029" target="_blank" rel="noopener">YouTube</a>
+            <span class="text-white/50" aria-hidden="true">&middot;</span>
+            <a class="link-gold font-semibold" href="https://x.com/AynParkerUsry" target="_blank" rel="noopener">X @AynParkerUsry</a>
+          </p>
         </div>
-        <aside class="lg:pt-24">
-          <div class="card p-6">
-            <h3 class="font-bold text-white">More from Ayn</h3>
-            <p class="mt-3 text-white/70"><a class="link-gold font-semibold" href="https://www.youtube.com/@APU-2029" target="_blank" rel="noopener">YouTube: @APU-2029 &rarr;</a></p>
-            <p class="mt-2 text-white/70"><a class="link-gold font-semibold" href="https://x.com/AynParkerUsry" target="_blank" rel="noopener">X: @AynParkerUsry &rarr;</a></p>
+        <form id="contact-form" class="grid grid-cols-2 gap-x-3 sm:gap-x-4 gap-y-3" novalidate>
+          <label class="field"><span>Name</span><input name="name" required maxlength="120" autocomplete="name" /></label>
+          <label class="field"><span>Role</span>
+            <select name="role" required>
+              <option value="" selected disabled>Choose one</option>
+              <option>College coach</option>
+              <option>Club/HS coach</option>
+              <option>Recruiter</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label class="field col-span-2"><span>School / program</span><input name="school" maxlength="160" autocomplete="organization" /></label>
+          <label class="field"><span>Email</span><input name="email" type="email" required maxlength="200" autocomplete="email" /></label>
+          <label class="field"><span>Phone <em>(optional)</em></span><input name="phone" type="tel" maxlength="40" autocomplete="tel" /></label>
+          <label class="field col-span-2"><span>Message</span><textarea name="message" rows="3" required maxlength="5000"></textarea></label>
+          <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+          <div class="col-span-2 flex flex-wrap items-center gap-4 pt-1">
+            <button type="submit" class="btn-gold">Send message</button>
+            <p id="contact-status" class="text-sm" role="status" aria-live="polite"></p>
           </div>
-        </aside>
+        </form>
       </div>
     </section>
     <script is:inline>
@@ -328,9 +381,9 @@ const gallery = [
     </script>
   </main>
 
-  <footer class="bg-ink border-t border-white/10 text-white/60 text-sm">
-    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row justify-between gap-2">
-      <span>&copy; 2026 Ayn Parker Usry</span>
+  <footer class="bg-ink border-t border-white/10 text-white/75 text-sm">
+    <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row justify-between gap-1">
+      <span>&copy; 2026 Ayn Parker</span>
       <span>Class of 2029 &middot; Women's Flag Football</span>
     </div>
   </footer>
@@ -340,12 +393,12 @@ const gallery = [
   /* Clarke Central palette, sampled from album photos (portrait IMG_6520): gold #EEA43B, red #9A1F21, black #090909 */
   :root { --ink:#090909; --ink-2:#121212; --ink-3:#1a1a1a; --gold:#EEA43B; --gold-light:#F4BE6A; --red:#9A1F21; --red-light:#C2373A; }
   body { background:var(--ink); color:#fff; }
-  .preview-banner { background:var(--gold); color:var(--ink); text-align:center; font-size:.8rem; font-weight:800; padding:.4rem 1rem; }
+  .preview-banner { background:var(--gold); color:var(--ink); text-align:center; font-size:.7rem; line-height:1; font-weight:800; padding:.3rem 1rem; }
   .nav-link { transition:color .15s; } .nav-link:hover { color:var(--gold); }
-  .hero { min-height: 92vh; display:flex; align-items:flex-end; background:var(--ink); }
+  .hero { min-height: 88vh; display:flex; align-items:flex-end; background:var(--ink); }
   .hero-img { object-position: 62% 40%; }
   .hero-fade { background: linear-gradient(180deg, rgba(9,9,9,.15) 0%, rgba(9,9,9,0) 30%, rgba(9,9,9,.55) 55%, rgba(9,9,9,.94) 76%, var(--ink) 100%); }
-  .hero-inner { width:100%; padding-top: 52vh; padding-bottom: 2.75rem; }
+  .hero-inner { width:100%; padding-top: 48vh; padding-bottom: 2.25rem; }
   @media (min-width: 768px) {
     .hero { min-height: 640px; height: 86vh; max-height: 900px; align-items:center; }
     .hero-img { object-position: 62% 45%; }
@@ -354,37 +407,59 @@ const gallery = [
       linear-gradient(180deg, rgba(9,9,9,0) 62%, rgba(9,9,9,.7) 84%, var(--ink) 100%); }
     .hero-inner { padding-top: 4rem; padding-bottom: 4rem; }
   }
-  .chip { display:inline-flex; align-items:center; padding:.35rem .8rem; border-radius:999px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22); font-weight:600; }
+  .chip { display:inline-flex; align-items:center; padding:.35rem .8rem; border-radius:999px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.25); font-weight:600; }
   .chip-gold { background:var(--gold); border-color:var(--gold); color:var(--ink); font-weight:800; }
   .btn-gold { display:inline-flex; padding:.75rem 1.25rem; border-radius:.6rem; background:var(--gold); color:var(--ink); font-weight:800; transition:background .15s; }
   .btn-gold:hover { background:var(--gold-light); } .btn-gold:disabled { opacity:.6; }
-  .btn-outline { display:inline-flex; padding:.75rem 1.25rem; border-radius:.6rem; border:2px solid rgba(255,255,255,.6); color:#fff; font-weight:700; transition:border-color .15s, color .15s; }
+  .btn-outline { display:inline-flex; padding:.75rem 1.25rem; border-radius:.6rem; border:2px solid rgba(255,255,255,.7); color:#fff; font-weight:700; transition:border-color .15s, color .15s; }
   .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
   .link-gold { color:var(--gold); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:2px; } .link-gold:hover { color:var(--gold-light); }
-  .section { padding: 3.5rem 0; }
-  @media (min-width: 768px) { .section { padding: 5rem 0; } }
+  /* Tighter rhythm than v2 (3.5/5rem) */
+  .section { padding: 2.5rem 0; }
+  @media (min-width: 768px) { .section { padding: 3.75rem 0; } }
   .bg-ink-2 { background:var(--ink-2); }
   .eyebrow { font-size:.75rem; text-transform:uppercase; letter-spacing:.2em; font-weight:800; color:var(--gold); }
   .eyebrow::before { content:''; display:inline-block; width:1.5rem; height:3px; background:var(--red-light); vertical-align:middle; margin-right:.6rem; border-radius:2px; }
-  .section-title { margin-top:.35rem; font-size:1.9rem; font-weight:800; color:#fff; letter-spacing:-.01em; line-height:1.15; }
-  .card { background:var(--ink-3); border:1px solid rgba(255,255,255,.1); border-radius:1rem; }
-  .facts-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.1); border-radius:1rem; overflow:hidden; }
-  @media (min-width: 640px) { .facts-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
-  .fact { background:var(--ink-3); padding:1rem 1.15rem; display:flex; flex-direction:column; gap:.3rem; }
-  .label { display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; color:rgba(255,255,255,.55); font-weight:700; }
-  .value { display:inline-block; font-size:1.1rem; font-weight:700; color:#fff; margin-top:.25rem; }
-  .fact .value { margin-top:0; align-self:flex-start; }
-  .photo-frame { overflow:hidden; border-radius:1rem; background:#000; border:1px solid rgba(255,255,255,.1); }
-  .stat-card { background:var(--ink-3); border:1px solid rgba(255,255,255,.1); border-left:4px solid var(--gold); border-radius:.85rem; padding:1rem 1.15rem; display:flex; flex-direction:column; gap:.2rem; }
-  .stat-big { font-size:1.6rem; font-weight:800; color:var(--gold); line-height:1.1; }
-  .stat-label { font-size:.9rem; color:rgba(255,255,255,.75); }
-  .honor { display:flex; gap:.9rem; align-items:center; background:var(--ink-3); border:1px solid rgba(255,255,255,.1); border-radius:.85rem; padding:1rem 1.15rem; font-weight:600; }
-  .honor-year { flex:none; background:var(--red); color:#fff; font-weight:800; font-size:.8rem; padding:.25rem .55rem; border-radius:.4rem; }
+  .section-title { margin-top:.3rem; font-size:1.65rem; font-weight:800; color:#fff; letter-spacing:-.01em; line-height:1.15; }
+  @media (min-width: 768px) { .section-title { font-size:1.9rem; } }
+  .intro { font-size:1.05rem; line-height:1.6; color:rgba(255,255,255,.9); border-left:3px solid var(--gold); padding-left:1rem; }
+  .facts-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.12); border-radius:.85rem; overflow:hidden; }
+  .fact { background:var(--ink-3); padding:.7rem 1rem; display:flex; flex-direction:column; gap:.2rem; }
+  .label { display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; color:rgba(255,255,255,.75); font-weight:700; }
+  .value { display:block; font-size:1.05rem; font-weight:700; color:#fff; }
+  .photo-frame { overflow:hidden; border-radius:.85rem; background:#000; border:1px solid rgba(255,255,255,.1); }
+  /* Editorial photos: mobile = lead full width + 3-up row; desktop = lead (2fr) | tall | stacked pair */
+  .photo-ed { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.5rem; }
+  .photo-ed .ph-lead { grid-column:1 / -1; aspect-ratio:3 / 2; }
+  .photo-ed > figure:not(.ph-lead) { aspect-ratio:3 / 4; }
+  @media (min-width: 768px) {
+    .photo-ed { grid-template-columns:2fr 1fr 1fr; grid-template-rows:15rem 15rem; gap:.75rem; }
+    .photo-ed .ph-lead { grid-column:1; grid-row:1 / span 2; aspect-ratio:auto; }
+    .photo-ed > figure:not(.ph-lead) { aspect-ratio:auto; }
+    .photo-ed .ph-tall { grid-row:1 / span 2; }
+  }
+  .ph-cap { position:absolute; left:0; right:0; bottom:0; padding:1.5rem .8rem .55rem; font-size:.8rem; font-weight:600; color:#fff; background:linear-gradient(0deg, rgba(0,0,0,.78), rgba(0,0,0,0)); }
+  .lift { filter:brightness(1.22) contrast(1.04); }
+  .honor-year { flex:none; background:var(--red); color:#fff; font-weight:800; font-size:.75rem; padding:.15rem .5rem; border-radius:.35rem; }
+  .info-block { border-top:1px solid rgba(255,255,255,.15); }
+  .info-block > div { display:grid; grid-template-columns:8.5rem 1fr; gap:1rem; align-items:baseline; padding:.6rem 0; border-bottom:1px solid rgba(255,255,255,.15); }
+  .info-block dt { font-size:.72rem; text-transform:uppercase; letter-spacing:.12em; font-weight:700; color:rgba(255,255,255,.75); }
+  .info-block dd { font-weight:600; color:#fff; }
   .badge-red { display:inline-block; font-size:10px; text-transform:uppercase; letter-spacing:.1em; font-weight:800; background:var(--red); color:#fff; padding:.1rem .4rem; border-radius:.3rem; vertical-align:middle; }
-  .sched-row { transition:background .15s; } .sched-row:hover { background:rgba(238,164,59,.07); }
-  .field { display:flex; flex-direction:column; gap:.35rem; font-size:.8rem; font-weight:700; color:rgba(255,255,255,.75); }
-  .field em { font-weight:500; font-style:normal; color:rgba(255,255,255,.45); }
-  .field input, .field select, .field textarea { background:#0f0f0f; border:1px solid rgba(255,255,255,.18); border-radius:.55rem; padding:.65rem .8rem; color:#fff; font-size:1rem; font-weight:500; }
+  .sched { border-top:1px solid rgba(255,255,255,.15); }
+  .sched-row { display:grid; grid-template-columns:6.5rem 1fr; column-gap:1rem; row-gap:.1rem; align-items:baseline; padding:.7rem .25rem; border-bottom:1px solid rgba(255,255,255,.15); transition:background .15s; }
+  @media (min-width: 640px) { .sched-row { grid-template-columns:7.5rem 5.5rem 1fr; } }
+  .sched-row:hover { background:rgba(238,164,59,.07); }
+  .sched-more > summary { list-style:none; cursor:pointer; }
+  .sched-more > summary::-webkit-details-marker { display:none; }
+  .sched-toggle { padding:.7rem .25rem; font-size:.875rem; font-weight:700; color:var(--gold); }
+  .sched-toggle::after { content:' \25BE'; }
+  .sched-more .less { display:none; } .sched-more[open] .less { display:inline; } .sched-more[open] .more { display:none; }
+  .sched-more[open] > .sched-toggle::after { content:' \25B4'; }
+  /* Simpler form: no card, quiet inputs */
+  .field { display:flex; flex-direction:column; gap:.3rem; font-size:.8rem; font-weight:700; color:rgba(255,255,255,.85); }
+  .field em { font-weight:500; font-style:normal; color:rgba(255,255,255,.7); }
+  .field input, .field select, .field textarea { min-width:0; width:100%; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.2); border-radius:.45rem; padding:.6rem .75rem; color:#fff; font-size:1rem; font-weight:500; }
   .field input:focus, .field select:focus, .field textarea:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(238,164,59,.25); }
   .hp { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
 </style>

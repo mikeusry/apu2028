@@ -1,40 +1,24 @@
 ---
-// Compact Mux thumbnail grid (Stars National Walker player-page pattern).
-// Clicking a card opens the shared lightbox player in index.astro; no player loads until then.
+// Lead clip + smaller grid. variant 'feature': lead full width, rest in a grid below (game film).
+// variant 'side': lead takes 2/3 on desktop with the rest stacked beside it; on mobile lead then a 2-up grid (track, strength).
+import VideoThumb from './VideoThumb.astro';
 interface Video { id: string; playbackId: string; title: string; caption: string; thumbTime?: number; vertical?: boolean }
-const { videos } = Astro.props as { videos: Video[] };
+const { videos, label, variant = 'side' } = Astro.props as { videos: Video[]; label?: string; variant?: 'feature' | 'side' };
+const [lead, ...rest] = videos;
 ---
-<div class="mt-6 grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
-  {videos.map((v) => (
-    <button
-      type="button"
-      class="video-thumb group text-left self-start w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-xl"
-      data-playback-id={v.playbackId}
-      data-video-id={v.id}
-      data-title={v.caption}
-      data-vertical={v.vertical ? '1' : undefined}
-      aria-label={`Play: ${v.caption}`}
-    >
-      <div class="relative aspect-video rounded-xl overflow-hidden ring-1 ring-white/10 group-hover:ring-2 group-hover:ring-gold transition-all bg-black">
-        {v.vertical && (
-          <img src={`https://image.mux.com/${v.playbackId}/thumbnail.jpg?width=320&time=${v.thumbTime ?? 5}`} alt="" aria-hidden="true" loading="lazy" class="absolute inset-0 w-full h-full object-cover blur-md opacity-75 scale-110" />
-        )}
-        <img
-          src={`https://image.mux.com/${v.playbackId}/thumbnail.jpg?width=640&time=${v.thumbTime ?? 5}`}
-          alt={v.caption}
-          loading="lazy"
-          width={v.vertical ? 360 : 640}
-          height={v.vertical ? 640 : 360}
-          class={`relative w-full h-full ${v.vertical ? 'object-contain' : 'object-cover'} group-hover:scale-105 transition-transform duration-300`}
-        />
-        <div class="absolute inset-0 bg-black/25 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-          <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-gold flex items-center justify-center group-hover:scale-110 transition-transform">
-            <svg class="w-6 h-6 sm:w-7 sm:h-7 ml-1" style="color:#090909" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          </div>
-        </div>
+{lead && variant === 'feature' && (
+  <div class="mt-5">
+    <VideoThumb v={lead} size="lg" label={label} />
+    {rest.length > 0 && (
+      <div class="mt-4 sm:mt-5 grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
+        {rest.map((v) => <VideoThumb v={v} size="sm" />)}
       </div>
-      <p class="mt-2 font-bold text-xs sm:text-sm leading-snug text-white group-hover:text-gold transition-colors">{v.caption}</p>
-      <p class="text-xs text-white/55 mt-0.5">{v.title}</p>
-    </button>
-  ))}
-</div>
+    )}
+  </div>
+)}
+{lead && variant === 'side' && (
+  <div class="mt-5 grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
+    <div class="col-span-2 lg:row-span-2"><VideoThumb v={lead} size="md" label={label} /></div>
+    {rest.map((v) => <VideoThumb v={v} size="sm" />)}
+  </div>
+)}
