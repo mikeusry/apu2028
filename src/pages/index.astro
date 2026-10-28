@@ -2,6 +2,30 @@
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
 
+// Highlight reels hosted on Mux (public playback). Order: Elbert County, MLK, Jackson County.
+const highlights = [
+  {
+    id: 'elbert-county',
+    playbackId: 'EtlnZ3GOqp8YnVflVRYb9ppQb77bgLF10202j3qoe16B00',
+    title: 'Ayn Usry #7 highlight reel',
+    caption: 'Clarke Central vs Elbert County \u00b7 1:06',
+    thumbTime: 5,
+  },
+  {
+    id: 'mlk',
+    playbackId: '01hGq02x4mN3zLB4tqdhBKM7Yi61yw8v9kBEkFGWOGHyc',
+    title: 'Ayn Usry #7 highlight reel',
+    caption: 'Clarke Central vs MLK \u00b7 1:19',
+    thumbTime: 5,
+  },
+  {
+    id: 'jackson-county-vs-mountain-view',
+    playbackId: 'xb7IAEAog7SnuG702rzK00Yg1iuJpu11yebWKq9xnZoA00',
+    title: 'Interceptions',
+    caption: 'Jackson County vs Mountain View \u00b7 4 interceptions \u00b7 0:43',
+    thumbTime: 2,
+  },
+];
 ---
 
 <Layout>
@@ -41,18 +65,31 @@ import '../styles/global.css';
       </div>
     </section>
 
+    <script is:inline src="https://cdn.jsdelivr.net/npm/@mux/mux-player@3" defer></script>
     <!-- Highlights -->
     <section id="highlights" class="section">
       <div class="max-w-5xl mx-auto px-4">
         <h2 class="section-title">Highlights</h2>
-        <div class="mt-6 rounded-2xl overflow-hidden shadow-lg bg-black">
-          <video id="jackson-county-vs-mountain-view" class="w-full aspect-video" controls preload="metadata" playsinline
-            poster="/video/jackson-county-vs-mountain-view.jpg">
-            <source src="/video/jackson-county-vs-mountain-view.mp4" type="video/mp4" />
-          </video>
+        <div class="mt-6 grid gap-10">
+          {highlights.map((h, i) => (
+            <div>
+              <div class="rounded-2xl overflow-hidden shadow-lg bg-black aspect-video">
+                <mux-player
+                  id={h.id}
+                  playback-id={h.playbackId}
+                  poster={`https://image.mux.com/${h.playbackId}/thumbnail.jpg?width=1280&time=${h.thumbTime}`}
+                  metadata-video-title={h.title}
+                  stream-type="on-demand"
+                  accent-color="#062a4b"
+                  preload={i === 0 ? 'metadata' : 'none'}
+                  style="width:100%;height:100%;aspect-ratio:16/9;display:block"
+                ></mux-player>
+              </div>
+              <h3 class="mt-4 text-lg font-bold">{h.title}</h3>
+              <p class="text-gray-600 text-sm mt-1">{h.caption}</p>
+            </div>
+          ))}
         </div>
-        <h3 class="mt-4 text-lg font-bold">Jackson County vs Mountain View highlights</h3>
-        <p class="text-gray-600 text-sm mt-1">4 interceptions &middot; 0:43</p>
       </div>
     </section>
 
