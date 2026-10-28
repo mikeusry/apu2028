@@ -1,0 +1,9 @@
+[
+  {"date": "Mon, Nov 2", "time": "5:00 PM", "ha": "vs", "opponent": "Madison County", "region": true, "note": "Senior Night"},
+  {"date": "Mon, Nov 2", "time": "7:00 PM", "ha": "vs", "opponent": "Cedar Shoals", "region": true, "note": "Senior Night"},
+  {"date": "Sat, Nov 7", "time": "12:00 PM", "ha": "@", "opponent": "Evans", "region": false, "note": ""},
+  {"date": "Mon, Nov 9", "time": "6:30 PM", "ha": "@", "opponent": "Walnut Grove", "region": true, "note": "At Habersham Central"},
+  {"date": "Mon, Nov 9", "time": "8:00 PM", "ha": "@", "opponent": "Habersham Central", "region": true, "note": ""},
+  {"date": "Thu, Nov 12", "time": "6:30 PM", "ha": "@", "opponent": "Monroe Area", "region": false, "note": "At Oconee County High School"},
+  {"date": "Thu, Nov 12", "time": "7:30 PM", "ha": "@", "opponent": "Oconee County", "region": false, "note": ""}
+]
