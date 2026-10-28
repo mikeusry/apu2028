@@ -6,7 +6,7 @@ import VideoGrid from '../components/VideoGrid.astro';
 // All site videos are on Mux (public playback). One line per video in src/data/site-videos.json; order = display order.
 import videos from '../data/site-videos.json';
 const byId = (ids: string[]) => ids.map((id) => videos.find((v) => v.id === id)).filter(Boolean) as typeof videos;
-// First game reel = featured "Start here" clip (Loganville); the rest go in the smaller grid.
+// First game reel = featured "Start here" clip (Elbert County); the rest go in the smaller grid.
 const gameVideos = videos.filter((v) => v.category === 'game');
 const speedVideos = byId(['60m-dash-886', 'hurdles-region', '4x100-relay']);
 const strengthVideos = byId(['box-squat-245x5x5', 'pin-squat-330', 'summer-workouts']);
