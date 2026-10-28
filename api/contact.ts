@@ -37,7 +37,7 @@ function validate(body: Record<string, unknown>): { ok: true; data: Contact } | 
     message: clean(body.message, LIMITS.message),
   };
   if (data.name.length < 2) return { ok: false, error: 'Please enter your name.' };
-  if (!(ROLES as readonly string[]).includes(data.role)) return { ok: false, error: 'Please choose your role.' };
+  if (data.role && !(ROLES as readonly string[]).includes(data.role)) return { ok: false, error: 'Please choose a role from the list.' };
   if (!EMAIL_RE.test(data.email)) return { ok: false, error: 'Please enter a valid email.' };
   if (data.phone && !/^[0-9+().\-\s x]{7,40}$/i.test(data.phone)) return { ok: false, error: 'Please check the phone number.' };
   if (data.message.length < 5) return { ok: false, error: 'Please enter a message.' };
@@ -94,7 +94,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   let logged = false;
   try {
     const rows = (await supabase('site_contacts', 'POST', {
-      name: c.name, role: c.role, school: c.school || null, email: c.email, phone: c.phone || null,
+      name: c.name, role: c.role || null, school: c.school || null, email: c.email, phone: c.phone || null,
       message: c.message, page_url: pageUrl || null, user_agent: userAgent || null, ip_hash: ipHash, email_status: 'pending',
     })) as Array<{ id: string }> | null;
     if (rows) { rowId = rows[0]?.id ?? null; logged = true; }
@@ -109,7 +109,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const apiKey = process.env.SENDGRID_API_KEY;
   if (apiKey) {
     sgMail.setApiKey(apiKey);
-    const rowsHtml = ([['Name', c.name], ['Role', c.role], ['School / program', c.school || '-'], ['Email', c.email], ['Phone', c.phone || '-'], ['Page', pageUrl || '-']] as const)
+    const rowsHtml = ([['Name', c.name], ['Role', c.role || '-'], ['School / program', c.school || '-'], ['Email', c.email], ['Phone', c.phone || '-'], ['Page', pageUrl || '-']] as const)
       .map(([k, val]) => `<tr><td style="padding:6px 12px 6px 0;color:#64748b">${k}</td><td style="padding:6px 0;font-weight:600">${esc(val)}</td></tr>`).join('');
     try {
       const [resp] = await sgMail.send({
@@ -117,7 +117,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         from: process.env.SENDGRID_FROM_EMAIL || 'alerts@point.dog',
         replyTo: { email: c.email, name: c.name },
         subject: `Ayn site contact: ${c.name}${c.school ? `, ${c.school}` : ''}`.slice(0, 200),
-        text: `Name: ${c.name}\nRole: ${c.role}\nSchool/program: ${c.school || '-'}\nEmail: ${c.email}\nPhone: ${c.phone || '-'}\nPage: ${pageUrl || '-'}\n\n${c.message}\n`,
+        text: `Name: ${c.name}\nRole: ${c.role || '-'}\nSchool/program: ${c.school || '-'}\nEmail: ${c.email}\nPhone: ${c.phone || '-'}\nPage: ${pageUrl || '-'}\n\n${c.message}\n`,
         html: `<div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:560px"><h2 style="margin:0 0 12px">New contact from Ayn's site</h2><table>${rowsHtml}</table><p style="white-space:pre-wrap;margin-top:16px;padding:12px;background:#f8fafc;border-radius:8px">${esc(c.message)}</p><p style="color:#94a3b8;font-size:12px">Reply to this email to answer ${esc(c.name)} directly.</p></div>`,
       });
       sendgridCode = resp?.statusCode ?? null;

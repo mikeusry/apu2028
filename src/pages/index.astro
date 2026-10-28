@@ -58,7 +58,7 @@ const supportPhotos = [
       <div class="relative max-w-6xl mx-auto px-4 hero-inner">
         <div class="max-w-md">
           <p class="uppercase tracking-[0.2em] text-xs md:text-sm text-gold font-bold">Women's flag football</p>
-          <h1 class="mt-3 text-4xl md:text-6xl font-extrabold leading-[1.05]">Ayn Parker</h1>
+          <h1 class="mt-3 text-[2.6rem] sm:text-5xl md:text-7xl font-extrabold leading-[1.02] tracking-tight">Ayn Parker Usry</h1>
           <div class="mt-5 flex flex-wrap gap-2 text-sm md:text-base">
             <span class="chip chip-gold">#7</span>
             <span class="chip">Class of 2029</span>
@@ -145,8 +145,10 @@ const supportPhotos = [
           box.classList.add('hidden'); box.classList.remove('flex');
           document.body.style.overflow = '';
         }
-        document.querySelectorAll('.video-thumb').forEach(function (b) {
-          b.addEventListener('click', function () { open(b); });
+        // Delegated: this script runs before the film/track/strength markup exists, so bind on document.
+        document.addEventListener('click', function (e) {
+          var b = e.target && e.target.closest ? e.target.closest('.video-thumb') : null;
+          if (b) { e.preventDefault(); open(b); }
         });
         document.getElementById('lightbox-close').addEventListener('click', close);
         box.addEventListener('click', function (e) { if (e.target === box) close(); });
@@ -161,8 +163,8 @@ const supportPhotos = [
           <img src="/photos/ayn-7-portrait-black.jpg" alt="Ayn Parker #7 in a black Clarke Central jersey" width="900" height="1831" loading="lazy" class="w-full h-full object-cover" style="object-position:50% 20%" />
         </figure>
         <div>
-          <p class="eyebrow">Quick facts</p>
-          <h2 class="section-title">The basics</h2>
+          <p class="eyebrow">Athlete profile</p>
+          <h2 class="section-title">Meet Ayn Parker</h2>
           {/* PERSONAL INTRO SLOT: renders only when `intro` (frontmatter) has text. */}
           {intro && <p class="intro mt-4">{intro}</p>}
           <dl class="mt-5 facts-grid">
@@ -180,12 +182,12 @@ const supportPhotos = [
     </section>
 
     <!-- 3b. Family (text approved by Mike, Oct 28 2026). No article photos or UGA logos. -->
-    <section id="family" class="bg-ink-2 pb-10 md:pb-14">
+    <section id="family" class="bg-ink-2 pb-8 md:pb-10">
       <div class="max-w-6xl mx-auto px-4">
-        <div class="family max-w-3xl mx-auto card p-6 md:p-10 text-center">
-          <h2 class="section-title">Family</h2>
-          <p class="mt-4 text-white/90 leading-relaxed text-left md:text-center"><strong class="text-gold">An athletic family.</strong> Ayn Parker comes from a family that knows what it takes to compete in college. Her mom, Karin (Lichey) Usry, was an 11-time All-American gymnast at Georgia and won NCAA titles with the GymDogs in 1998 and 1999. Her dad, Mike Usry, was a quarterback for the Bulldogs from 1996 to 1999. They understand the demands of being a college athlete, from the early workouts to balancing school and travel, and they've raised Ayn Parker with that in mind.</p>
-          <p class="mt-4 text-sm"><a class="link-gold font-semibold" href="https://www.redandblack.com/sports/this-was-home-former-bulldogs-karin-and-mike-usry-raise-family-in-athens/article_73c4a170-b9b0-11ea-8720-bb60a2e7f32f.html" target="_blank" rel="noopener">Read the Red &amp; Black story</a></p>
+        <div class="family border-t border-white/15 pt-5 md:pt-6 max-w-3xl">
+          <h2 class="text-xl md:text-2xl font-extrabold text-white">An athletic family</h2>
+          <p class="mt-2 text-white/90 leading-relaxed">Ayn Parker comes from a family that knows what it takes to compete in college. Her mom, Karin (Lichey) Usry, was an 11-time All-American gymnast at Georgia and won NCAA titles with the GymDogs in 1998 and 1999. Her dad, Mike Usry, was a quarterback for the Bulldogs from 1996 to 1999. They understand the demands of being a college athlete, from the early workouts to balancing school and travel, and they've raised Ayn Parker with that in mind.</p>
+          <p class="mt-2 text-sm"><a class="link-gold font-semibold" href="https://www.redandblack.com/sports/this-was-home-former-bulldogs-karin-and-mike-usry-raise-family-in-athens/article_73c4a170-b9b0-11ea-8720-bb60a2e7f32f.html" target="_blank" rel="noopener">Read the Red &amp; Black story</a></p>
         </div>
       </div>
     </section>
@@ -306,8 +308,8 @@ const supportPhotos = [
         <div>
           <p class="eyebrow">Contact</p>
           <h2 class="section-title">Get in touch</h2>
-          <p class="mt-2 text-white/80">Coaches and recruiters: send a note and we'll get back to you.</p>
-          <p class="mt-4 text-sm text-white/80">More from Ayn Parker:
+          <p class="mt-2 text-white/80">Send me a note and I'll get back to you.</p>
+          <p class="mt-4 text-sm text-white/80">Find me on:
             <a class="link-gold font-semibold ml-1" href="https://www.youtube.com/@APU-2029" target="_blank" rel="noopener">YouTube</a>
             <span class="text-white/50" aria-hidden="true">&middot;</span>
             <a class="link-gold font-semibold" href="https://x.com/AynParkerUsry" target="_blank" rel="noopener">X @AynParkerUsry</a>
@@ -315,9 +317,9 @@ const supportPhotos = [
         </div>
         <form id="contact-form" class="grid grid-cols-2 gap-x-3 sm:gap-x-4 gap-y-3" novalidate>
           <label class="field"><span>Name</span><input name="name" required maxlength="120" autocomplete="name" /></label>
-          <label class="field"><span>Role</span>
-            <select name="role" required>
-              <option value="" selected disabled>Choose one</option>
+          <label class="field"><span>Role <em>(optional)</em></span>
+            <select name="role">
+              <option value="" selected>Choose one</option>
               <option>College coach</option>
               <option>Club/HS coach</option>
               <option>Recruiter</option>
@@ -344,7 +346,7 @@ const supportPhotos = [
         f.addEventListener('submit', function (e) {
           e.preventDefault();
           var d = Object.fromEntries(new FormData(f).entries());
-          if (!d.name || !d.role || !d.email || !d.message) { st.className = 'text-sm text-glred-light'; st.textContent = 'Please fill in name, role, email and message.'; return; }
+          if (!d.name || !d.email || !d.message) { st.className = 'text-sm text-glred-light'; st.textContent = 'Please fill in name, email and message.'; return; }
           d.page_url = location.href;
           var btn = f.querySelector('button[type=submit]');
           btn.disabled = true; st.className = 'text-sm text-white/70'; st.textContent = 'Sending...';
@@ -363,7 +365,7 @@ const supportPhotos = [
 
   <footer class="bg-ink border-t border-white/10 text-white/75 text-sm">
     <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row justify-between gap-1">
-      <span>&copy; 2026 Ayn Parker</span>
+      <span>&copy; 2026 Ayn Parker Usry</span>
       <span>Class of 2029 &middot; Women's Flag Football</span>
     </div>
   </footer>
